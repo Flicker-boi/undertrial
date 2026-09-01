@@ -5,16 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Undertale - Deneme Takip</title>
     <link rel="icon" type="image/png" href="nn.png">
-    <link href="https://fonts.cdnfonts.com/css/determination-mono" rel="stylesheet">
     <style>
-        /* Undertale Font Tanımı (CDN Destekli) */
+        /* Font Tanımları (fonts klasöründen çekilecek şekilde güncellendi) */
         @font-face {
             font-family: 'WhFont';
-            src: url('https://fonts.cdnfonts.com/s/15649/DeterminationMonoWeb.woff') format('woff');
+            src: url('fonts/wh.ttf') format('truetype');
         }
         @font-face {
             font-family: 'NoteThis';
-            src: url('notethis.ttf') format('truetype');
+            src: url('fonts/notethis.ttf') format('truetype');
         }
 
         body { 
@@ -1435,9 +1434,9 @@
                 torielAudio.pause();
                 torielAudio.currentTime = 0;
             }
-            if (sansAudio) {
-                sansAudio.pause();
-                sansAudio.currentTime = 0;
+            if (sansVoice) {
+                sansVoice.pause();
+                sansVoice.currentTime = 0;
             }
         }
 
@@ -1497,7 +1496,7 @@
                 torielAudio.play().catch(e => {});
             }
 
-            aktifYaziciTimer = setInterval(() => {
+            aktifYaxiciTimer = setInterval(() => {
                 if (i < text.length) {
                     const char = text.charAt(i);
                     textContainer.innerText += char;
