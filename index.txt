@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Undertale - Deneme Takip</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        @font-face {
+            font-family: 'NoteThis';
+            src: url('Note this.ttf') format('truetype');
+        }
+
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            max-width: 600px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            background: #000 url('neden.gif') no-repeat center center fixed; 
+            background-size: cover; 
+            color: white; 
+            user-select: none;
+            transition: background 1s ease-in-out;
+        }
+        
+        body.kaka-bg {
+            background: #000 url('kaka.png') no-repeat center center fixed !important;
+            background-size: cover !important;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: -1;
+            transition: opacity 1s ease-in-out;
+        }
+
+        body.kaka-bg::before {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .card { 
+            background: black; 
+            border: 4px solid white; 
+            border-radius: 5px; 
+            padding: 20px; 
+            margin-bottom: 20px; 
+            box-sizing: border-box;
+            width: 100%;
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+        }
+
+        body.kaka-bg .card,
+        body.kaka-bg .top-bar,
+        body.kaka-bg #welcomeScreen {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.95);
+        }
+
+        h3 { 
+            margin-top: 0; 
+            color: #ffff00; 
+            font-size: 13px; 
+            font-family: 'Press Start 2P', cursive; 
+            text-shadow: 2px 2px #333;
+            margin-bottom: 15px;
+        }
+
+        .form-group { margin-bottom: 15px; }
+        
+        label { 
+            display: block; 
+            font-size: 10px; 
+            font-family: 'Press Start 2P', cursive;
+            color: #ffffff; 
+            margin-bottom: 6px; 
+        }
+
+        input, select { 
+            width: 100%; 
+            padding: 10px; 
+            border: 2px solid white; 
+            background: black; 
+            color: white; 
+            border-radius: 0px; 
+            box-sizing: border-box; 
+            font-size: 12px; 
+            font-family: 'Press Start 2P', cursive;
+            user-select: text; 
+            outline: none;
+        }
+        input:focus, select:focus { border-color: #ffff00; }
+
+        .row { display: flex; gap: 10px; }
+
+        .start-text-btn {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 15px;
+            cursor: pointer;
+            padding: 10px;
+            margin-top: 10px;
+            width: 100%;
+            text-align: left;
+            transition: color 0.2s, transform 0.2s;
+            outline: none;
+        }
+        .start-text-btn:hover {
+            color: #ffff00;
+            transform: scale(1.02);
+        }
+        .start-text-btn:focus {
+            outline: none;
+        }
+
+        .top-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: stretch;
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+        }
+
+        .music-panel { 
+            background: black; 
+            border: 4px solid white; 
+            padding: 8px 12px; 
+            border-radius: 5px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center;
+            gap: 5px; 
+            font-size: 10px; 
+            flex: 1;
+        }
+        
+        .volume-control { display: flex; align-items: center; gap: 6px; }
+
+        .lan-btn {
+            background: transparent;
+            border: none;
+            width: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+            padding: 0;
+            flex-shrink: 0;
+            overflow: visible;
+            outline: none;
+        }
+        .lan-btn:hover {
+            transform: scale(1.05);
+        }
+        .lan-btn:focus {
+            outline: none;
+        }
+        .lan-btn img {
+            width: 60px;
+            height: 60px;
+            object-fit: visible;
+            image-rendering: pixelated;
+            overflow: visible;
+        }
+
+        .back-map-btn {
+            display: none;
+            background: black;
+            color: white;
+            border: 3px solid white;
+            padding: 10px 15px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+            flex: 1;
+            text-align: center;
+            align-items: center;
+            justify-content: center;
+            outline: none;
+        }
+        .back-map-btn.show {
+            display: flex;
+        }
+        .back-map-btn:hover {
+            background: white;
+            color: black;
+            border-color: #ffff00;
+        }
+        .back-map-btn:focus {
+            outline: none;
+        }
+
+        .shop-controls {
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .shop-controls.show {
+            display: flex;
+        }
+
+        .shop-top-row {
+            display: flex;
+            gap: 10px;
+            align-items: stretch;
+        }
+
+        .shop-select-card {
+            background: black;
+            border: 4px solid white;
+            border-radius: 5px;
+            padding: 15px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .shop-dialogue-card {
+            background: black;
+            border: 4px solid white;
+            border-radius: 5px;
+            padding: 20px;
+            box-sizing: border-box;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .sans-box {
+            background: black;
+            border: 4px solid white;
+            border-radius: 5px;
+            padding: 15px;
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .shop-dialogue-text {
+            font-family: 'NoteThis', sans-serif;
+            font-size: 18px;
+            line-height: 1.6;
+            color: #ffffff;
+            flex: 1;
+            min-width: 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .swipe-wrapper { 
+            position: relative; 
+            overflow: hidden; 
+            border-radius: 5px; 
+            margin-bottom: 8px; 
+            background: #f44336; 
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .delete-bg { 
+            position: absolute; 
+            left: 0; 
+            top: 0; 
+            bottom: 0; 
+            width: 100px; 
+            background: #f44336; 
+            color: white; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-weight: bold; 
+            font-size: 11px; 
+            z-index: 1; 
+            font-family: 'Press Start 2P', cursive; 
+        }
+        
+        .swipe-btn { 
+            position: relative;
+            background: black; 
+            color: white; 
+            border: 2px solid white; 
+            text-align: left; 
+            padding: 14px; 
+            border-radius: 5px; 
+            font-family: 'Press Start 2P', cursive;
+            font-size: 11px;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            width: 100%; 
+            cursor: pointer; 
+            z-index: 2;
+            box-sizing: border-box;
+            transition: transform 0.1s ease-out;
+            touch-action: pan-y;
+            outline: none;
+        }
+        .swipe-btn:hover { background: #111; border-color: #ffff00; }
+        .swipe-btn:focus { outline: none; border-color: #ffff00; }
+        
+        .ders-block { background: black; border: 4px solid white; border-radius: 5px; margin-bottom: 10px; overflow: hidden; }
+        
+        .ders-header-content { 
+            background: black; 
+            padding: 12px; 
+            color: #ffffff; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            font-size: 11px; 
+            width: 100%; 
+            cursor: pointer; 
+            border: 2px solid white; 
+            text-align: left; 
+            border-radius: 5px;
+            font-family: 'Press Start 2P', cursive;
+            box-sizing: border-box;
+            outline: none;
+        }
+        .ders-header-content:hover { color: #ffff00; }
+        .ders-header-content:focus { outline: none; }
+        .ders-icerik { display: none; padding: 10px; background: #050505; }
+
+        .konu-header { 
+            padding: 10px; 
+            font-size: 10px; 
+            font-family: 'Press Start 2P', cursive;
+            color: #fff; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            cursor: pointer; 
+            background: black; 
+            width: 100%; 
+            border: 2px solid white; 
+            border-radius: 5px; 
+            text-align: left; 
+            box-sizing: border-box;
+            outline: none;
+        }
+        .konu-header:hover { border-color: #ffff00; color: #ffff00; }
+        .konu-header:focus { outline: none; }
+        .konu-detay { display: none; padding: 12px; background: black; border: 2px dashed #666; margin-top: 5px; border-radius: 5px; }
+
+        .undertale-box { 
+            background: black; 
+            border: 4px solid white; 
+            border-radius: 5px; 
+            padding: 12px; 
+            display: flex; 
+            gap: 12px; 
+            align-items: flex-start; 
+            margin-top: 10px; 
+            min-height: 80px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+        .toriel-avatar { 
+            width: 50px; 
+            height: 50px; 
+            object-fit: contain; 
+            flex-shrink: 0; 
+            image-rendering: pixelated; 
+        }
+        .dialogue-text { 
+            font-family: 'Press Start 2P', cursive; 
+            font-size: 10px; 
+            line-height: 1.8; 
+            color: #ffffff; 
+            flex: 1; 
+            min-width: 0;
+            white-space: pre-wrap; 
+            word-break: break-word; 
+            overflow-wrap: break-word;
+        }
+
+        .chart-box { 
+            width: 160px; 
+            height: 160px; 
+            margin: 10px auto; 
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: transparent;
+        }
+        .chart-box canvas {
+            width: 140px;
+            height: 140px;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            image-rendering: pixelated;
+        }
+        .chart-box img.heart-mask-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 160px;
+            height: 160px;
+            pointer-events: none;
+            object-fit: contain;
+            image-rendering: pixelated;
+            z-index: 2;
+        }
+
+        .bar-chart-container {
+            width: 100%;
+            background: #000;
+            border: 2px solid white;
+            padding: 12px 8px 8px 8px;
+            box-sizing: border-box;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+        .bar-chart-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 8px;
+            color: #ffff00;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .bar-chart-canvas-box {
+            width: 100%;
+            height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: auto;
+            position: relative;
+        }
+        .bar-chart-canvas-box canvas {
+            height: 150px;
+        }
+
+        #chartTooltip {
+            position: absolute;
+            display: none;
+            background: black;
+            border: 2px solid white;
+            color: #ffff00;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 7px;
+            padding: 4px 6px;
+            z-index: 99;
+            pointer-events: none;
+            white-space: nowrap;
+            transform: translateX(-50%);
+        }
+        
+        .back-btn { 
+            background: black; 
+            color: white; 
+            border: 2px solid white;
+            width: auto; 
+            padding: 8px 12px; 
+            font-size: 10px; 
+            font-family: 'Press Start 2P', cursive;
+            cursor: pointer;
+            outline: none;
+        }
+        .back-btn:hover { border-color: #ffff00; color: #ffff00; }
+        .back-btn:focus { outline: none; }
+        
+        #welcomeScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            box-sizing: border-box;
+            padding: 20px;
+            transition: opacity 0.8s ease;
+        }
+        .welcome-container {
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+        }
+
+        #mainAppContent { display: none; opacity: 0; transition: opacity 0.8s ease; }
+    </style>
+</head>
+<body>
+
+    <div id="welcomeScreen">
+        <div class="welcome-container">
+            <div class="undertale-box" style="margin-bottom: 20px; text-align: left;">
+                <img id="welcomeTorielImg" src="https://i.ibb.co/bgVjVpPK/toriel.png" class="toriel-avatar" alt="Toriel">
+                <div id="welcomeDialogue" class="dialogue-text"></div>
+            </div>
+            <button id="startAppBtn" class="start-text-btn" onclick="baslatUygulama()">* BAŞLA</button>
+        </div>
+    </div>
+
+    <div id="mainAppContent">
+        <div class="top-bar" id="normalTopBar">
+            <div class="music-panel">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span id="musicTitle" style="font-family: 'Press Start 2P', cursive; color: #ffffff; font-size: 9px;">🎵 Fallen Down</span>
+                    <button id="bgMusicBtn" onclick="toggleBgMusic()" style="width: auto; padding: 2px 6px; font-size: 8px; font-family: 'Press Start 2P', cursive; background:black; color:white; border: 2px solid white; cursor: pointer; outline: none;">⏸ DURDUR</button>
+                </div>
+                <div class="volume-control">
+                    <label style="margin:0; font-size:7px;">Ses:</label>
+                    <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.3" oninput="changeVolume(this.value)" style="cursor: pointer; height: 10px;">
+                </div>
+            </div>
+            <div class="lan-btn" onclick="goToKakaBg()" title="Özel Arka Plana Git">
+                <img src="lan.png" alt="Lan">
+            </div>
+        </div>
+
+        <div id="shopControls" class="shop-controls">
+            <div class="shop-top-row">
+                <button id="backMapBtn" class="back-map-btn show" onclick="goBackFromKakaBg()">← GERİ DÖN</button>
+                <div class="music-panel">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span id="shopMusicTitle" style="font-family: 'Press Start 2P', cursive; color: #ffffff; font-size: 9px;">🎵 Shop</span>
+                        <button id="shopBgMusicBtn" onclick="toggleBgMusic()" style="width: auto; padding: 2px 6px; font-size: 8px; font-family: 'Press Start 2P', cursive; background:black; color:white; border: 2px solid white; cursor: pointer; outline: none;">⏸ DURDUR</button>
+                    </div>
+                    <div class="volume-control">
+                        <label style="margin:0; font-size:7px;">Ses:</label>
+                        <input type="range" id="shopVolumeSlider" min="0" max="1" step="0.01" value="0.3" oninput="changeVolume(this.value)" style="cursor: pointer; height: 10px;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="shop-select-card">
+                <label style="font-family: 'Press Start 2P', cursive; font-size: 9px; color: #ffff00; margin-bottom: 8px;">KONU ANALİZİ SEÇ:</label>
+                <select id="konuSecimSelect" onchange="konuAnalizGoster(this.value)">
+                    <option value="">* Bir konu seçin...</option>
+                </select>
+            </div>
+
+            <div class="shop-dialogue-card">
+                <div class="chart-box" id="shopChartContainer" style="display:none;">
+                    <canvas id="shopCanvas" width="150" height="140"></canvas>
+                </div>
+                
+                <div class="bar-chart-container" id="barChartCardContainer" style="display:none;">
+                    <div class="bar-chart-title">DENEMELERE GÖRE DOĞRU / YANLIŞ / BOŞ</div>
+                    <div class="bar-chart-canvas-box" id="barCanvasBox">
+                        <canvas id="barCanvas" width="400" height="150"></canvas>
+                        <div id="chartTooltip"></div>
+                    </div>
+                </div>
+
+                <div class="sans-box" style="display: block;">
+                    <div id="shopDialogueText" class="shop-dialogue-text">* Greetings... Choose a topic above to unveil the secrets of your trials.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>➕ DENEME VE KONU EKLE</h3>
+            <div class="row">
+                <div class="form-group" style="flex: 2;">
+                    <label>DENEME ADI</label>
+                    <input type="text" id="denemeAdi" placeholder="Örn: TYT 1">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>TOPLAM SORU</label>
+                    <input type="number" id="denemeToplamSoru" placeholder="120">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group" style="flex: 1.5;">
+                    <label>DERS ADI</label>
+                    <input type="text" id="dersAdi" placeholder="Matematik">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>DERS SORU</label>
+                    <input type="number" id="dersSoruSayisi" placeholder="40">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>KONU ADI</label>
+                <input type="text" id="konuAdi" placeholder="Fonksiyonlar">
+            </div>
+            <div class="row">
+                <div class="form-group">
+                    <label>KONU TOP</label>
+                    <input type="number" id="toplamSoru" placeholder="10">
+                </div>
+                <div class="form-group">
+                    <label>DOĞRU</label>
+                    <input type="number" id="dogru" placeholder="0">
+                </div>
+                <div class="form-group">
+                    <label>YANLIŞ</label>
+                    <input type="number" id="yanlis" placeholder="0">
+                </div>
+            </div>
+            <button id="saveAppBtn" class="start-text-btn" onclick="kaydet()">* KAYDET VE TORİEL'E SOR</button>
+        </div>
+
+        <div class="card" id="listeEkrani">
+            <h3>📂 KAYITLI DENEMELERİM <span style="font-size:7px; color:#aaa; font-weight:normal; display:block; margin-top:5px;">(Silmek için sağa kaydırın)</span></h3>
+            <div id="denemeListesi"></div>
+        </div>
+
+        <div class="card" id="detayEkrani" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 id="detayBaslik" style="margin:0;">-</h3>
+                <button class="back-btn" onclick="listeyeDon()">← Geri</button>
+            </div>
+            <div id="dersGörünümü"></div>
+        </div>
+    </div>
+
+    <audio id="bgAudio" loop src="fallendown.mp3"></audio>
+    <audio id="torielVoice" src="toriel.mp3"></audio>
+    <audio id="sansVoice" src="sans.mp3"></audio>
+
+    <script>
+        const TORIEL_RESIM_1 = "https://i.ibb.co/bgVjVpPK/toriel.png";
+        const TORIEL_RESIM_2 = "https://i.ibb.co/nN37fGZq/toriel2.png";
+        
+        let isMusicPlaying = false;
+        let aktifDenemeIsmi = "";
+        let aktifYaziciTimer = null;
+        let barHitboxes = [];
+
+        window.onload = function() {
+            const welcomeText = "* Merhaba evladım...\n* Deneme takip sistemine hoş geldin.\n* Başlamak için aşağıdaki düğmeye basabilirsin.";
+            typeWriterWelcome("welcomeDialogue", "welcomeTorielImg", welcomeText);
+        };
+
+        function baslatUygulama() {
+            durdurYazici();
+            const welcomeScreen = document.getElementById('welcomeScreen');
+            const mainContent = document.getElementById('mainAppContent');
+            
+            welcomeScreen.style.opacity = "0";
+            setTimeout(() => {
+                welcomeScreen.style.display = "none";
+                mainContent.style.display = "block";
+                setTimeout(() => {
+                    mainContent.style.opacity = "1";
+                }, 50);
+            }, 800);
+            
+            const audio = document.getElementById('bgAudio');
+            audio.volume = 0.3;
+            audio.play().then(() => {
+                isMusicPlaying = true;
+            }).catch(err => {
+                isMusicPlaying = false;
+                document.getElementById('bgMusicBtn').innerText = "▶ BAŞLAT";
+            });
+
+            denemeleriYukle();
+        }
+
+        function goToKakaBg() {
+            durdurYazici();
+            document.body.classList.add('kaka-bg');
+            document.getElementById('normalTopBar').style.display = 'none';
+            document.getElementById('shopControls').classList.add('show');
+            
+            konuSecimleriniDoldur();
+
+            const audio = document.getElementById('bgAudio');
+            audio.src = 'shop3.mp3';
+            audio.play().then(() => {
+                isMusicPlaying = true;
+                document.getElementById('shopMusicTitle').innerText = "🎵 Shop";
+            }).catch(err => {});
+
+            typeWriterSans("* Greetings... Choose a topic above to unveil the secrets of your trials.");
+        }
+
+        function goBackFromKakaBg() {
+            durdurYazici();
+            document.getElementById('shopControls').classList.remove('show');
+            document.getElementById('normalTopBar').style.display = 'flex';
+            document.body.classList.remove('kaka-bg');
+            
+            const audio = document.getElementById('bgAudio');
+            audio.src = 'fallendown.mp3';
+            audio.play().then(() => {
+                isMusicPlaying = true;
+                document.getElementById('musicTitle').innerText = "🎵 Fallen Down";
+            }).catch(err => {});
+        }
+
+        function konuSecimleriniDoldur() {
+            let tumDenemeler = JSON.parse(localStorage.getItem('myDenemeler')) || {};
+            let select = document.getElementById('konuSecimSelect');
+            select.innerHTML = '<option value="">* Bir konu seçin...</option>';
+            
+            let konularSet = new Set();
+            for (let deneme in tumDenemeler) {
+                tumDenemeler[deneme].forEach(item => {
+                    konularSet.add(item.konu);
+                });
+            }
+
+            konularSet.forEach(konu => {
+                let opt = document.createElement('option');
+                opt.value = konu;
+                opt.innerText = konu;
+                select.appendChild(opt);
+            });
+        }
+
+        function konuAnalizGoster(secilenKonu) {
+            let chartContainer = document.getElementById('shopChartContainer');
+            let barContainer = document.getElementById('barChartCardContainer');
+
+            if (!secilenKonu) {
+                chartContainer.style.display = 'none';
+                barContainer.style.display = 'none';
+                typeWriterSans("* Greetings... Choose a topic above to unveil the secrets of your trials.");
+                return;
+            }
+
+            let tumDenemeler = JSON.parse(localStorage.getItem('myDenemeler')) || {};
+            let denemeIsimleri = Object.keys(tumDenemeler);
+            let toplamD = 0, toplamY = 0, toplamB = 0, toplamSoru = 0;
+            let denemeBazliVeriler = [];
+
+            denemeIsimleri.forEach((deneme, idx) => {
+                let dTop = 0, yTop = 0, bTop = 0;
+                let bulunan = false;
+                tumDenemeler[deneme].forEach(item => {
+                    if (item.konu === secilenKonu) {
+                        dTop += item.dogru;
+                        yTop += item.yanlis;
+                        bTop += item.bos;
+                        toplamD += item.dogru;
+                        toplamY += item.yanlis;
+                        toplamB += item.bos;
+                        toplamSoru += item.toplam;
+                        bulunan = true;
+                    }
+                });
+                if (bulunan) {
+                    denemeBazliVeriler.push({
+                        no: idx + 1,
+                        dogru: dTop,
+                        yanlis: yTop,
+                        bos: bTop
+                    });
+                }
+            });
+
+            let basari = toplamSoru > 0 ? ((toplamD / toplamSoru) * 100).toFixed(0) : 0;
+            let analizMetni = `* Ah, gölgeler "${secilenKonu}" hakkında fısıldıyor...\n* Toplam Soru: ${toplamSoru}\n* Doğru: ${toplamD} | Yanlış: ${toplamY} | Boş: ${toplamB}\n* Başarı Oranı: %${basari}`;
+
+            chartContainer.style.display = 'flex';
+            barContainer.style.display = 'block';
+
+            drawPieChartWithHeartMask('shopCanvas', toplamD, toplamY, toplamB);
+            drawAnimatedGroupedBarChart('barCanvas', denemeBazliVeriler);
+            
+            typeWriterSans(analizMetni);
+        }
+
+        function toggleBgMusic() {
+            const audio = document.getElementById('bgAudio');
+            const btn = document.getElementById('bgMusicBtn');
+            const shopBtn = document.getElementById('shopBgMusicBtn');
+            if (isMusicPlaying) {
+                audio.pause();
+                isMusicPlaying = false;
+                if (btn) btn.innerText = "▶ BAŞLAT";
+                if (shopBtn) shopBtn.innerText = "▶ BAŞLAT";
+            } else {
+                audio.play().then(() => {
+                    isMusicPlaying = true;
+                    if (btn) btn.innerText = "⏸ DURDUR";
+                    if (shopBtn) shopBtn.innerText = "⏸ DURDUR";
+                }).catch(err => {});
+            }
+        }
+
+        function changeVolume(val) {
+            document.getElementById('bgAudio').volume = val;
+            let sliders = document.querySelectorAll('input[type="range"]');
+            sliders.forEach(s => s.value = val);
+        }
+
+        function makeSwipeable(element, onDeleteCallback, onClickCallback) {
+            let startX = 0;
+            let currentTranslate = 0;
+            let isDragging = false;
+
+            const touchStart = (e) => {
+                startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+                isDragging = false;
+                document.addEventListener('mousemove', touchMove);
+                document.addEventListener('mouseup', touchEnd);
+                document.addEventListener('touchmove', touchMove);
+                document.addEventListener('touchend', touchEnd);
+            };
+
+            const touchMove = (e) => {
+                const currentX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+                const diff = currentX - startX;
+                if (diff > 10) isDragging = true;
+                if (diff > 0 && diff < 200) {
+                    currentTranslate = diff;
+                    element.style.transform = `translateX(${currentTranslate}px)`;
+                }
+            };
+
+            const touchEnd = () => {
+                document.removeEventListener('mousemove', touchMove);
+                document.removeEventListener('mouseup', touchEnd);
+                document.removeEventListener('touchmove', touchMove);
+                document.removeEventListener('touchend', touchEnd);
+
+                if (currentTranslate > 120) {
+                    onDeleteCallback();
+                } else {
+                    currentTranslate = 0;
+                    element.style.transform = `translateX(0px)`;
+                }
+                setTimeout(() => { isDragging = false; }, 50);
+            };
+
+            element.addEventListener('mousedown', touchStart);
+            element.addEventListener('touchstart', touchStart);
+
+            if (onClickCallback) {
+                element.addEventListener('click', (e) => {
+                    if (!isDragging) onClickCallback(e);
+                });
+            }
+        }
+
+        function kaydet() {
+            const denemeAdi = document.getElementById('denemeAdi').value.trim();
+            const denemeToplamSoru = parseInt(document.getElementById('denemeToplamSoru').value) || 0;
+            const dersAdi = document.getElementById('dersAdi').value.trim();
+            const dersSoruSayisi = parseInt(document.getElementById('dersSoruSayisi').value) || 0;
+            const konuAdi = document.getElementById('konuAdi').value.trim();
+            const toplamSoru = parseInt(document.getElementById('toplamSoru').value) || 0;
+            const dogru = parseInt(document.getElementById('dogru').value) || 0;
+            const yanlis = parseInt(document.getElementById('yanlis').value) || 0;
+
+            if (!denemeAdi || !dersAdi || !konuAdi || toplamSoru <= 0 || dersSoruSayisi <= 0 || denemeToplamSoru <= 0) {
+                alert("Lütfen tüm alanları eksiksiz doldurun.");
+                return;
+            }
+
+            if ((dogru + yanlis) > toplamSoru) {
+                alert("Hata: Doğru ve yanlışların toplamı, konunun toplam soru sayısından fazla olamaz!");
+                return;
+            }
+
+            let tumDenemeler = JSON.parse(localStorage.getItem('myDenemeler')) || {};
+            let denemeUstBilgiler = JSON.parse(localStorage.getItem('myDenemeUstBilgiler')) || {};
+
+            if (!denemeUstBilgiler[denemeAdi]) {
+                denemeUstBilgiler[denemeAdi] = denemeToplamSoru;
+            }
+
+            if (!tumDenemeler[denemeAdi]) tumDenemeler[denemeAdi] = [];
+
+            let tumDerslerSoruToplami = 0;
+            let mevcutDersSoruToplami = 0;
+            let hesaplananDersler = {};
+
+            tumDenemeler[denemeAdi].forEach(item => {
+                if (!hesaplananDersler[item.ders]) {
+                    hesaplananDersler[item.ders] = item.dersToplamSoru;
+                }
+                if (item.ders === dersAdi) {
+                    mevcutDersSoruToplami += item.toplam;
+                }
+            });
+            hesaplananDersler[dersAdi] = dersSoruSayisi;
+
+            for (let d in hesaplananDersler) {
+                tumDerslerSoruToplami += hesaplananDersler[d];
+            }
+
+            if (tumDerslerSoruToplami > denemeUstBilgiler[denemeAdi]) {
+                alert(`Hata: Bu ders ile birlikte denemedeki tüm derslerin toplam soru sayısı (${tumDerslerSoruToplami}), deneme üst sınırını (${denemeUstBilgiler[denemeAdi]}) geçiyor!`);
+                return;
+            }
+
+            if ((mevcutDersSoruToplami + toplamSoru) > dersSoruSayisi) {
+                alert(`Hata: Bu ders için girdiğiniz toplam soru sayısı (${dersSoruSayisi}) asıldı!`);
+                return;
+            }
+
+            const bos = toplamSoru - (dogru + yanlis);
+            const basariOrani = (dogru / toplamSoru) * 100;
+            const isPass = basariOrani >= 70;
+            
+            const mesaj = isPass 
+                ? "* Harika bir iş çıkardın, evladım!\n* Bu konuya tekrar çalışmana gerek yok." 
+                : "* Görünüşe göre biraz zorlanmışsın...\n* Lütfen bu konuyu bir kez daha gözden geçir, olur mu?";
+
+            const yeniKayit = {
+                ders: dersAdi,
+                dersToplamSoru: dersSoruSayisi,
+                konu: konuAdi,
+                toplam: toplamSoru,
+                dogru: dogru,
+                yanlis: yanlis < 0 ? 0 : yanlis,
+                bos: bos < 0 ? 0 : bos,
+                oran: basariOrani.toFixed(0),
+                torielMesaj: mesaj,
+                isPass: isPass
+            };
+
+            tumDenemeler[denemeAdi].push(yeniKayit);
+            localStorage.setItem('myDenemeler', JSON.stringify(tumDenemeler));
+            localStorage.setItem('myDenemeUstBilgiler', JSON.stringify(denemeUstBilgiler));
+
+            document.getElementById('konuAdi').value = '';
+            document.getElementById('toplamSoru').value = '';
+            document.getElementById('dogru').value = '';
+            document.getElementById('yanlis').value = '';
+
+            denemeleriYukle();
+        }
+
+        function denemeleriYukle() {
+            const listeDiv = document.getElementById('denemeListesi');
+            let tumDenemeler = JSON.parse(localStorage.getItem('myDenemeler')) || {};
+            let denemeUstBilgiler = JSON.parse(localStorage.getItem('myDenemeUstBilgiler')) || {};
+            
+            listeDiv.innerHTML = "";
+            const isimler = Object.keys(tumDenemeler);
+
+            if (isimler.length === 0) {
+                listeDiv.innerHTML = "<p style='color:#777; font-size:10px; font-family:\"Press Start 2P\", cursive; padding: 10px;'>Henüz kayıtlı deneme yok.</p>";
+                return;
+            }
+
+            isimler.forEach((isim, index) => {
+                const siraNo = index + 1;
+                const kayitlar = tumDenemeler[isim] || [];
+                const maxSoru = denemeUstBilgiler[isim] || 0;
+                
+                let toplamDogru = 0;
+                kayitlar.forEach(k => { toplamDogru += k.dogru; });
+
+                const denemeBasariOrani = maxSoru > 0 ? ((toplamDogru / maxSoru) * 100).toFixed(0) : 0;
+
+                const wrapper = document.createElement('div');
+                wrapper.className = "swipe-wrapper";
+
+                const deleteBg = document.createElement('div');
+                deleteBg.className = "delete-bg";
+                deleteBg.innerText = "SİL";
+
+                const btn = document.createElement('div');
+                btn.className = "swipe-btn";
+                btn.innerHTML = `<span>${siraNo}. 📘 ${isim} <span style="font-size:8px; color:#aaa; font-weight:normal;">(${maxSoru} Soru)</span></span> <span style="font-size:9px; color:#ffff00;">%${denemeBasariOrani} ❯</span>`;
+                
+                makeSwipeable(btn, () => {
+                    if (confirm(`"${isim}" adlı denemeyi silmek istediğine emin misin?`)) {
+                        delete tumDenemeler[isim];
+                        delete denemeUstBilgiler[isim];
+                        localStorage.setItem('myDenemeler', JSON.stringify(tumDenemeler));
+                        localStorage.setItem('myDenemeUstBilgiler', JSON.stringify(denemeUstBilgiler));
+                        denemeleriYukle();
+                    } else {
+                        btn.style.transform = `translateX(0px)`;
+                    }
+                }, () => {
+                    denemeDetayGoster(isim);
+                });
+
+                wrapper.appendChild(deleteBg);
+                wrapper.appendChild(btn);
+                listeDiv.appendChild(wrapper);
+            });
+        }
+
+        function denemeDetayGoster(denemeIsmi) {
+            durdurYazici();
+            aktifDenemeIsmi = denemeIsmi;
+            let tumDenemeler = JSON.parse(localStorage.getItem('myDenemeler')) || {};
+            let denemeUstBilgiler = JSON.parse(localStorage.getItem('myDenemeUstBilgiler')) || {};
+            
+            if (!tumDenemeler[aktifDenemeIsmi] || tumDenemeler[aktifDenemeIsmi].length === 0) {
+                delete tumDenemeler[aktifDenemeIsmi];
+                delete denemeUstBilgiler[aktifDenemeIsmi];
+                localStorage.setItem('myDenemeler', JSON.stringify(tumDenemeler));
+                localStorage.setItem('myDenemeUstBilgiler', JSON.stringify(denemeUstBilgiler));
+                listeyeDon();
+                return;
+            }
+
+            document.getElementById('listeEkrani').style.display = "none";
+            document.getElementById('detayEkrani').style.display = "block";
+            document.getElementById('detayBaslik').innerText = denemeIsmi;
+
+            const anaDiv = document.getElementById('dersGörünümü');
+            anaDiv.innerHTML = "";
+
+            const kayitlar = tumDenemeler[denemeIsmi] || [];
+            const dersler = {};
+            kayitlar.forEach(item => {
+                if (!dersler[item.ders]) {
+                    dersler[item.ders] = { dersToplamSoru: item.dersToplamSoru, konular: [] };
+                }
+                dersler[item.ders].konular.push(item);
+            });
+
+            let globalIndex = 0;
+
+            for (const [dersAdi, dersVerisi] of Object.entries(dersler)) {
+                let dersDogru = 0, dersToplamGirilen = 0;
+                dersVerisi.konular.forEach(k => { dersDogru += k.dogru; dersToplamGirilen += k.toplam; });
+                const dersBasari = dersToplamGirilen > 0 ? ((dersDogru / dersToplamGirilen) * 100).toFixed(0) : 0;
+
+                const dersBlock = document.createElement('div');
+                dersBlock.className = "ders-block";
+
+                const dersWrapper = document.createElement('div');
+                dersWrapper.className = "swipe-wrapper";
+
+                const dersDeleteBg = document.createElement('div');
+                dersDeleteBg.className = "delete-bg";
+                dersDeleteBg.innerText = "SİL";
+
+                const dersHeaderBtn = document.createElement('button');
+                dersHeaderBtn.className = "swipe-btn ders-header-content";
+                dersHeaderBtn.innerHTML = `<span>📚 ${dersAdi} (${dersVerisi.dersToplamSoru} Soru)</span> <span style="font-size:9px; color:#ffff00;">%${dersBasari} ▼</span>`;
+
+                makeSwipeable(dersHeaderBtn, () => {
+                    if (confirm(`"${dersAdi}" dersini silmek istiyor musun?`)) {
+                        tumDenemeler[aktifDenemeIsmi] = tumDenemeler[aktifDenemeIsmi].filter(k => k.ders !== dersAdi);
+                        localStorage.setItem('myDenemeler', JSON.stringify(tumDenemeler));
+                        denemeDetayGoster(aktifDenemeIsmi);
+                    } else {
+                        dersHeaderBtn.style.transform = `translateX(0px)`;
+                    }
+                }, () => {
+                    toggleDers(dersHeaderBtn);
+                });
+
+                dersWrapper.appendChild(dersDeleteBg);
+                dersWrapper.appendChild(dersHeaderBtn);
+                dersBlock.appendChild(dersWrapper);
+
+                const icerikDiv = document.createElement('div');
+                icerikDiv.className = "ders-icerik";
+
+                dersVerisi.konular.forEach((konuItem) => {
+                    const idx = globalIndex++;
+                    const cId = `chart-${idx}`;
+                    const dialogId = `dialog-${idx}`;
+                    const imgId = `toriel-img-${idx}`;
+
+                    let mesaj = konuItem.torielMesaj;
+                    if (!mesaj) {
+                        mesaj = (konuItem.dogru / konuItem.toplam) >= 0.7 
+                            ? "* Harika bir iş çıkardın, evladım!\n* Bu konuya tekrar çalışmana gerek yok." 
+                            : "* Görünüşe göre biraz zorlanmışsın...\n* Lütfen bu konuyu bir kez daha gözden geçir, olur mu?";
+                    }
+
+                    const konuWrapper = document.createElement('div');
+                    konuWrapper.className = "swipe-wrapper";
+
+                    const konuDeleteBg = document.createElement('div');
+                    konuDeleteBg.className = "delete-bg";
+                    konuDeleteBg.innerText = "SİL";
+
+                    const konuHeaderBtn = document.createElement('button');
+                    konuHeaderBtn.className = "swipe-btn konu-header";
+                    konuHeaderBtn.innerHTML = `<span>📌 ${konuItem.konu}</span> <span style="font-size:8px; color:#aaa;" id="konu-btn-txt-${idx}">▶ Göster</span>`;
+
+                    makeSwipeable(konuHeaderBtn, () => {
+                        if (confirm(`"${konuItem.konu}" konusunu silmek istiyor musun?`)) {
+                            tumDenemeler[aktifDenemeIsmi] = tumDenemeler[aktifDenemeIsmi].filter(k => !(k.ders === dersAdi && k.konu === konuItem.konu));
+                            localStorage.setItem('myDenemeler', JSON.stringify(tumDenemeler));
+                            denemeDetayGoster(aktifDenemeIsmi);
+                        } else {
+                            konuHeaderBtn.style.transform = `translateX(0px)`;
+                        }
+                    }, () => {
+                        toggleKonu(idx, cId, dialogId, imgId, encodeURIComponent(mesaj), konuItem.dogru, konuItem.yanlis, konuItem.bos, konuHeaderBtn);
+                    });
+
+                    const detayIcerikDiv = document.createElement('div');
+                    detayIcerikDiv.className = "konu-detay";
+                    detayIcerikDiv.id = `konu-detay-${idx}`;
+                    detayIcerikDiv.innerHTML = `
+                        <div class="chart-box">
+                            <canvas id="${cId}" width="150" height="140"></canvas>
+                        </div>
+                        <div style="font-size:9px; text-align:center; color:#ffff00; margin-top:5px; font-family:'Press Start 2P', cursive;">
+                            Başarı: %${konuItem.oran}
+                        </div>
+                        <div style="font-size:8px; text-align:center; color:#ccc; margin-top:3px; font-family:'Press Start 2P', cursive;">
+                            <b>Soru:</b> ${konuItem.toplam} | <span style="color:#00c000">D:${konuItem.dogru}</span> | <span style="color:#ff0000">Y:${konuItem.yanlis}</span> | <span style="color:#888">B:${konuItem.bos}</span>
+                        </div>
+                        <div class="undertale-box">
+                            <img id="${imgId}" src="${TORIEL_RESIM_1}" class="toriel-avatar" alt="Toriel">
+                            <div id="${dialogId}" class="dialogue-text"></div>
+                        </div>
+                    `;
+
+                    const konuContainer = document.createElement('div');
+                    konuContainer.className = "konu-item";
+                    konuWrapper.appendChild(konuDeleteBg);
+                    konuWrapper.appendChild(konuHeaderBtn);
+                    konuContainer.appendChild(konuWrapper);
+                    konuContainer.appendChild(detayIcerikDiv);
+
+                    icerikDiv.appendChild(konuContainer);
+                });
+
+                dersBlock.appendChild(icerikDiv);
+                anaDiv.appendChild(dersBlock);
+            }
+        }
+
+        function toggleDers(headerEl) {
+            const icerik = headerEl.parentElement.parentElement.querySelector('.ders-icerik');
+            const isOpen = icerik.style.display === "block";
+            icerik.style.display = isOpen ? "none" : "block";
+            const spanEl = headerEl.querySelector('span:last-child');
+            spanEl.innerText = spanEl.innerText.replace(isOpen ? '▲' : '▼', isOpen ? '▼' : '▲');
+        }
+
+        function toggleKonu(idx, canvasId, dialogId, imgId, encodedText, d, y, b, headerBtn) {
+            durdurYazici();
+
+            const detayDiv = document.getElementById(`konu-detay-${idx}`);
+            const isOpen = detayDiv.style.display === "block";
+
+            document.querySelectorAll('.konu-detay').forEach(el => el.style.display = "none");
+            document.querySelectorAll('.konu-header span:last-child').forEach(el => el.innerText = "▶ Göster");
+
+            if (isOpen) {
+                detayDiv.style.display = "none";
+                headerBtn.querySelector('span:last-child').innerText = "▶ Göster";
+            } else {
+                detayDiv.style.display = "block";
+                headerBtn.querySelector('span:last-child').innerText = "▼ Gizle";
+                
+                drawPieChartWithHeartMask(canvasId, d, y, b);
+
+                const rawText = decodeURIComponent(encodedText);
+                typeWriterEffect(dialogId, imgId, rawText);
+            }
+        }
+
+        let heartMaskImage = new Image();
+        heartMaskImage.crossOrigin = "anonymous";
+        heartMaskImage.src = "https://i.ibb.co/4Z09dCDt/ah.png";
+
+        function drawPieChartWithHeartMask(canvasId, dogru, yanlis, bos) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            let total = dogru + yanlis + bos;
+            if (total <= 0) total = 1;
+
+            let angles = [
+                { count: dogru, color: '#00c000' },   
+                { count: yanlis, color: '#ff0000' },  
+                { count: bos, color: '#555555' }      
+            ];
+
+            let cx = canvas.width / 2;
+            let cy = canvas.height / 2;
+            let radius = Math.max(cx, cy) * 1.2;
+
+            let tempCanvas = document.createElement('canvas');
+            tempCanvas.width = canvas.width;
+            tempCanvas.height = canvas.height;
+            let tempCtx = tempCanvas.getContext('2d');
+
+            let currentAngle = -Math.PI / 2;
+            angles.forEach(slice => {
+                if (slice.count <= 0) return;
+                let sliceAngle = (slice.count / total) * (2 * Math.PI);
+
+                tempCtx.beginPath();
+                tempCtx.moveTo(cx, cy);
+                tempCtx.arc(cx, cy, radius, currentAngle, currentAngle + sliceAngle + 0.05);
+                tempCtx.closePath();
+
+                tempCtx.fillStyle = slice.color;
+                tempCtx.strokeStyle = slice.color;
+                tempCtx.lineWidth = 2;
+                tempCtx.fill();
+                tempCtx.stroke();
+
+                currentAngle += sliceAngle;
+            });
+
+            if (heartMaskImage.complete && heartMaskImage.naturalWidth !== 0) {
+                tempCtx.globalCompositeOperation = 'destination-in';
+                tempCtx.drawImage(heartMaskImage, 0, 0, tempCanvas.width, tempCanvas.height);
+            }
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(tempCanvas, 0, 0);
+        }
+
+        function drawAnimatedGroupedBarChart(canvasId, dataList) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            if (!dataList || dataList.length === 0) return;
+
+            let dynamicWidth = Math.max(400, dataList.length * 60 + 50);
+            canvas.width = dynamicWidth;
+            canvas.style.width = dynamicWidth + "px";
+
+            let maxSoru = 1;
+            dataList.forEach(item => {
+                let m = Math.max(item.dogru, item.yanlis, item.bos);
+                if (m > maxSoru) maxSoru = m;
+            });
+
+            let paddingBottom = 25;
+            let paddingTop = 15;
+            let chartHeight = canvas.height - paddingBottom - paddingTop;
+            let chartWidth = canvas.width;
+
+            let startTime = performance.now();
+            let duration = 600;
+
+            barHitboxes = [];
+
+            function animate(currentTime) {
+                let elapsed = currentTime - startTime;
+                let progress = Math.min(elapsed / duration, 1);
+                let easeProgress = 1 - Math.pow(1 - progress, 3);
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                ctx.strokeStyle = '#333333';
+                ctx.lineWidth = 1;
+                for (let i = 0; i <= 4; i++) {
+                    let y = paddingTop + (chartHeight / 4) * i;
+                    ctx.beginPath();
+                    ctx.moveTo(35, y);
+                    ctx.lineTo(chartWidth - 10, y);
+                    ctx.stroke();
+
+                    let valLabel = Math.round(maxSoru - (maxSoru / 4) * i);
+                    ctx.fillStyle = '#888888';
+                    ctx.font = '8px sans-serif';
+                    ctx.fillText(valLabel, 5, y + 3);
+                }
+
+                let groupWidth = (chartWidth - 45) / dataList.length;
+                let barWidth = Math.max(5, Math.min(12, groupWidth / 4)); 
+
+                let currentHitboxes = [];
+
+                dataList.forEach((item, index) => {
+                    let groupX = 45 + index * groupWidth + (groupWidth - (barWidth * 3 + 6)) / 2;
+
+                    let hD = (item.dogru / maxSoru) * chartHeight * easeProgress;
+                    let hY = (item.yanlis / maxSoru) * chartHeight * easeProgress;
+                    let hB = (item.bos / maxSoru) * chartHeight * easeProgress;
+
+                    let baseY = paddingTop + chartHeight;
+
+                    let xD = groupX;
+                    let xY = groupX + barWidth + 3;
+                    let xB = groupX + (barWidth * 2) + 6;
+
+                    ctx.fillStyle = '#00c000';
+                    ctx.fillRect(xD, baseY - hD, barWidth, hD);
+
+                    ctx.fillStyle = '#ff0000';
+                    ctx.fillRect(xY, baseY - hY, barWidth, hY);
+
+                    ctx.fillStyle = '#777777';
+                    ctx.fillRect(xB, baseY - hB, barWidth, hB);
+
+                    if (progress === 1) {
+                        ctx.fillStyle = '#ffffff';
+                        ctx.font = '7px sans-serif';
+                        ctx.textAlign = 'center';
+                        
+                        let textYD = baseY - hD - 3;
+                        let textYY = baseY - hY - 3;
+                        let textYB = baseY - hB - 3;
+
+                        ctx.fillText(item.dogru, xD + barWidth/2, textYD);
+                        ctx.fillText(item.yanlis, xY + barWidth/2, textYY);
+                        ctx.fillText(item.bos, xB + barWidth/2, textYB);
+                        ctx.textAlign = 'start';
+                    }
+
+                    ctx.fillStyle = '#ffffff';
+                    ctx.font = '7px "Press Start 2P", sans-serif';
+                    ctx.textAlign = 'center';
+                    let numX = groupX + barWidth + 3;
+                    let numY = canvas.height - 8;
+                    ctx.fillText(item.no, numX, numY);
+                    ctx.textAlign = 'start';
+
+                    if (progress === 1) {
+                        currentHitboxes.push({
+                            x: groupX - 6,
+                            y: 0,
+                            w: (barWidth * 3 + 6) + 12,
+                            h: canvas.height,
+                            centerX: numX,
+                            topY: paddingTop,
+                            text: `Deneme ${item.no} -> D: ${item.dogru} | Y: ${item.yanlis} | B: ${item.bos}`
+                        });
+                    }
+                });
+
+                barHitboxes = currentHitboxes;
+
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        const barBoxEl = document.getElementById('barCanvasBox');
+        const tooltipEl = document.getElementById('chartTooltip');
+
+        barBoxEl.addEventListener('mousemove', (e) => {
+            const rect = barBoxEl.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left + barBoxEl.scrollLeft;
+            const mouseY = e.clientY - rect.top;
+
+            let hovered = null;
+            barHitboxes.forEach(box => {
+                if (mouseX >= box.x && mouseX <= box.x + box.w && mouseY >= box.y && mouseY <= box.y + box.h) {
+                    hovered = box;
+                }
+            });
+
+            if (hovered) {
+                tooltipEl.style.display = 'block';
+                tooltipEl.innerText = hovered.text;
+                tooltipEl.style.left = hovered.centerX + 'px';
+                tooltipEl.style.top = (hovered.topY - 14) + 'px';
+            } else {
+                tooltipEl.style.display = 'none';
+            }
+        });
+
+        barBoxEl.addEventListener('mouseleave', () => {
+            tooltipEl.style.display = 'none';
+        });
+
+        function durdurYazici() {
+            if (aktifYaziciTimer) {
+                clearInterval(aktifYaziciTimer);
+                aktifYaziciTimer = null;
+            }
+            const torielAudio = document.getElementById('torielVoice');
+            const sansAudio = document.getElementById('sansVoice');
+            if (torielAudio) {
+                torielAudio.pause();
+                torielAudio.currentTime = 0;
+            }
+            if (sansAudio) {
+                sansAudio.pause();
+                sansAudio.currentTime = 0;
+            }
+        }
+
+        function typeWriterWelcome(elementId, imgId, text) {
+            durdurYazici();
+            let i = 0;
+            const textContainer = document.getElementById(elementId);
+            const imgElement = document.getElementById(imgId);
+            const torielAudio = document.getElementById('torielVoice');
+            if (!textContainer || !imgElement || !text) return;
+            
+            textContainer.innerText = "";
+            let toggleState = false;
+
+            if (torielAudio) {
+                torielAudio.loop = true;
+                torielAudio.currentTime = 0;
+                torielAudio.play().catch(e => {});
+            }
+
+            aktifYaziciTimer = setInterval(() => {
+                if (i < text.length) {
+                    const char = text.charAt(i);
+                    textContainer.innerText += char;
+                    i++;
+
+                    if (char !== ' ' && char !== '\n') {
+                        toggleState = !toggleState;
+                        imgElement.src = toggleState ? TORIEL_RESIM_2 : TORIEL_RESIM_1;
+                    }
+                } else {
+                    clearInterval(aktifYaziciTimer);
+                    aktifYaziciTimer = null;
+                    imgElement.src = TORIEL_RESIM_1;
+                    if (torielAudio) {
+                        torielAudio.pause();
+                        torielAudio.currentTime = 0;
+                    }
+                }
+            }, 60);
+        }
+
+        function typeWriterEffect(elementId, imgId, text) {
+            durdurYazici();
+            let i = 0;
+            const textContainer = document.getElementById(elementId);
+            const imgElement = document.getElementById(imgId);
+            const torielAudio = document.getElementById('torielVoice');
+            if (!textContainer || !imgElement || !text) return;
+            
+            textContainer.innerText = "";
+            let toggleState = false;
+
+            if (torielAudio) {
+                torielAudio.loop = true;
+                torielAudio.currentTime = 0;
+                torielAudio.play().catch(e => {});
+            }
+
+            aktifYaziciTimer = setInterval(() => {
+                if (i < text.length) {
+                    const char = text.charAt(i);
+                    textContainer.innerText += char;
+                    i++;
+
+                    if (char !== ' ' && char !== '\n') {
+                        toggleState = !toggleState;
+                        imgElement.src = toggleState ? TORIEL_RESIM_2 : TORIEL_RESIM_1;
+                    }
+                } else {
+                    clearInterval(aktifYaziciTimer);
+                    aktifYaziciTimer = null;
+                    imgElement.src = TORIEL_RESIM_1;
+                    if (torielAudio) {
+                        torielAudio.pause();
+                        torielAudio.currentTime = 0;
+                    }
+                }
+            }, 60);
+        }
+
+        function typeWriterSans(text) {
+            durdurYazici();
+            let i = 0;
+            const textContainer = document.getElementById('shopDialogueText');
+            const sansAudio = document.getElementById('sansVoice');
+            if (!textContainer || !text) return;
+            textContainer.innerText = "";
+
+            if (sansAudio) {
+                sansAudio.loop = true;
+                sansAudio.currentTime = 0;
+                sansAudio.play().catch(e => {});
+            }
+
+            aktifYaziciTimer = setInterval(() => {
+                if (i < text.length) {
+                    const char = text.charAt(i);
+                    textContainer.innerText += char;
+                    i++;
+                } else {
+                    clearInterval(aktifYaziciTimer);
+                    aktifYaziciTimer = null;
+                    if (sansAudio) {
+                        sansAudio.pause();
+                        sansAudio.currentTime = 0.0;
+                    }
+                }
+            }, 30);
+        }
+
+        function listeyeDon() {
+            durdurYazici();
+            document.getElementById('detayEkrani').style.display = "none";
+            document.getElementById('listeEkrani').style.display = "block";
+            denemeleriYukle();
+        }
+    </script>
+</body>
+</html>
+.
