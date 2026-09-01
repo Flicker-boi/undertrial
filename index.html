@@ -6,7 +6,7 @@
     <title>Undertale - Deneme Takip</title>
     <link rel="icon" type="image/png" href="nn.png">
     <style>
-        /* Font Tanımları (fonts klasöründen çekilecek şekilde güncellendi) */
+        /* Font Tanımları */
         @font-face {
             font-family: 'WhFont';
             src: url('fonts/wh.ttf') format('truetype');
@@ -17,13 +17,13 @@
         }
 
         body { 
-            font-family: 'WhFont', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            font-family: 'WhFont', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important; 
             max-width: 600px; 
             margin: 0 auto; 
             padding: 20px; 
             background: #000 url('neden.gif') no-repeat center center fixed; 
             background-size: cover; 
-            color: white; 
+            color: white !important; 
             user-select: none;
             transition: background 1s ease-in-out;
         }
@@ -68,9 +68,9 @@
 
         h3 { 
             margin-top: 0; 
-            color: #ffff00; 
-            font-size: 13px; 
-            font-family: 'WhFont', cursive; 
+            color: #ffff00 !important; 
+            font-size: 13px !important; 
+            font-family: 'WhFont', cursive !important; 
             text-shadow: 2px 2px #333;
             margin-bottom: 15px;
         }
@@ -79,9 +79,9 @@
         
         label { 
             display: block; 
-            font-size: 10px; 
-            font-family: 'WhFont', cursive;
-            color: #ffffff; 
+            font-size: 10px !important; 
+            font-family: 'WhFont', cursive !important;
+            color: #ffffff !important; 
             margin-bottom: 6px; 
         }
 
@@ -90,11 +90,11 @@
             padding: 10px; 
             border: 2px solid white; 
             background: black; 
-            color: white; 
+            color: white !important; 
             border-radius: 0px; 
             box-sizing: border-box; 
-            font-size: 12px; 
-            font-family: 'WhFont', cursive;
+            font-size: 12px !important; 
+            font-family: 'WhFont', cursive !important;
             user-select: text; 
             outline: none;
         }
@@ -105,9 +105,9 @@
         .start-text-btn {
             background: none;
             border: none;
-            color: #ffffff;
-            font-family: 'WhFont', cursive;
-            font-size: 15px;
+            color: #ffffff !important;
+            font-family: 'WhFont', cursive !important;
+            font-size: 15px !important;
             cursor: pointer;
             padding: 10px;
             margin-top: 10px;
@@ -117,7 +117,7 @@
             outline: none;
         }
         .start-text-btn:hover {
-            color: #ffff00;
+            color: #ffff00 !important;
             transform: scale(1.02);
         }
         .start-text-btn:focus {
@@ -178,11 +178,11 @@
         .back-map-btn {
             display: none;
             background: black;
-            color: white;
+            color: white !important;
             border: 3px solid white;
             padding: 10px 15px;
-            font-family: 'WhFont', cursive;
-            font-size: 10px;
+            font-family: 'WhFont', cursive !important;
+            font-size: 10px !important;
             cursor: pointer;
             border-radius: 5px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
@@ -198,7 +198,7 @@
         }
         .back-map-btn:hover {
             background: white;
-            color: black;
+            color: black !important;
             border-color: #ffff00;
         }
         .back-map-btn:focus {
@@ -254,10 +254,10 @@
             box-sizing: border-box;
         }
         .shop-dialogue-text {
-            font-family: 'NoteThis', sans-serif;
-            font-size: 18px;
+            font-family: 'NoteThis', sans-serif !important;
+            font-size: 18px !important;
             line-height: 1.6;
-            color: #ffffff;
+            color: #ffffff !important;
             flex: 1;
             min-width: 0;
             white-space: pre-wrap;
@@ -280,26 +280,26 @@
             bottom: 0; 
             width: 100px; 
             background: #f44336; 
-            color: white; 
+            color: white !important; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
             font-weight: bold; 
-            font-size: 11px; 
+            font-size: 11px !important; 
             z-index: 1; 
-            font-family: 'WhFont', cursive; 
+            font-family: 'WhFont', cursive !important; 
         }
         
         .swipe-btn { 
             position: relative;
             background: black; 
-            color: white; 
+            color: white !important; 
             border: 2px solid white; 
             text-align: left; 
             padding: 14px; 
             border-radius: 5px; 
-            font-family: 'WhFont', cursive;
-            font-size: 11px;
+            font-family: 'WhFont', cursive !important;
+            font-size: 11px !important;
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
@@ -319,29 +319,29 @@
         .ders-header-content { 
             background: black; 
             padding: 12px; 
-            color: #ffffff; 
+            color: #ffffff !important; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            font-size: 11px; 
+            font-size: 11px !important; 
             width: 100%; 
             cursor: pointer; 
             border: 2px solid white; 
             text-align: left; 
             border-radius: 5px;
-            font-family: 'WhFont', cursive;
+            font-family: 'WhFont', cursive !important;
             box-sizing: border-box;
             outline: none;
         }
-        .ders-header-content:hover { color: #ffff00; }
+        .ders-header-content:hover { color: #ffff00 !important; }
         .ders-header-content:focus { outline: none; }
         .ders-icerik { display: none; padding: 10px; background: #050505; }
 
         .konu-header { 
             padding: 10px; 
-            font-size: 10px; 
-            font-family: 'WhFont', cursive;
-            color: #fff; 
+            font-size: 10px !important; 
+            font-family: 'WhFont', cursive !important;
+            color: #fff !important; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
@@ -354,7 +354,7 @@
             box-sizing: border-box;
             outline: none;
         }
-        .konu-header:hover { border-color: #ffff00; color: #ffff00; }
+        .konu-header:hover { border-color: #ffff00; color: #ffff00 !important; }
         .konu-header:focus { outline: none; }
         .konu-detay { display: none; padding: 12px; background: black; border: 2px dashed #666; margin-top: 5px; border-radius: 5px; }
 
@@ -379,10 +379,10 @@
             image-rendering: pixelated; 
         }
         .dialogue-text { 
-            font-family: 'WhFont', cursive; 
-            font-size: 10px; 
+            font-family: 'WhFont', cursive !important; 
+            font-size: 10px !important; 
             line-height: 1.8; 
-            color: #ffffff; 
+            color: #ffffff !important; 
             flex: 1; 
             min-width: 0;
             white-space: pre-wrap; 
@@ -430,9 +430,9 @@
             border-radius: 4px;
         }
         .bar-chart-title {
-            font-family: 'WhFont', cursive;
-            font-size: 8px;
-            color: #ffff00;
+            font-family: 'WhFont', cursive !important;
+            font-size: 8px !important;
+            color: #ffff00 !important;
             margin-bottom: 10px;
             text-align: center;
         }
@@ -454,9 +454,9 @@
             display: none;
             background: black;
             border: 2px solid white;
-            color: #ffff00;
-            font-family: 'WhFont', cursive;
-            font-size: 7px;
+            color: #ffff00 !important;
+            font-family: 'WhFont', cursive !important;
+            font-size: 7px !important;
             padding: 4px 6px;
             z-index: 99;
             pointer-events: none;
@@ -466,16 +466,16 @@
         
         .back-btn { 
             background: black; 
-            color: white; 
+            color: white !important; 
             border: 2px solid white;
             width: auto; 
             padding: 8px 12px; 
-            font-size: 10px; 
-            font-family: 'WhFont', cursive;
+            font-size: 10px !important; 
+            font-family: 'WhFont', cursive !important;
             cursor: pointer;
             outline: none;
         }
-        .back-btn:hover { border-color: #ffff00; color: #ffff00; }
+        .back-btn:hover { border-color: #ffff00; color: #ffff00 !important; }
         .back-btn:focus { outline: none; }
         
         #welcomeScreen {
@@ -519,11 +519,11 @@
         <div class="top-bar" id="normalTopBar">
             <div class="music-panel">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span id="musicTitle" style="font-family: 'WhFont', cursive; color: #ffffff; font-size: 9px;">🎵 Fallen Down</span>
-                    <button id="bgMusicBtn" onclick="toggleBgMusic()" style="width: auto; padding: 2px 6px; font-size: 8px; font-family: 'WhFont', cursive; background:black; color:white; border: 2px solid white; cursor: pointer; outline: none;">⏸ DURDUR</button>
+                    <span id="musicTitle" style="font-family: 'WhFont', cursive !important; color: #ffffff !important; font-size: 9px !important;">🎵 Fallen Down</span>
+                    <button id="bgMusicBtn" onclick="toggleBgMusic()" style="width: auto; padding: 2px 6px; font-size: 8px !important; font-family: 'WhFont', cursive !important; background:black; color:white !important; border: 2px solid white; cursor: pointer; outline: none;">⏸ DURDUR</button>
                 </div>
                 <div class="volume-control">
-                    <label style="margin:0; font-size:7px;">Ses:</label>
+                    <label style="margin:0; font-size:7px !important;">Ses:</label>
                     <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.3" oninput="changeVolume(this.value)" style="cursor: pointer; height: 10px;">
                 </div>
             </div>
@@ -537,18 +537,18 @@
                 <button id="backMapBtn" class="back-map-btn show" onclick="goBackFromKakaBg()">← GERİ DÖN</button>
                 <div class="music-panel">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span id="shopMusicTitle" style="font-family: 'WhFont', cursive; color: #ffffff; font-size: 9px;">🎵 Shop</span>
-                        <button id="shopBgMusicBtn" onclick="toggleBgMusic()" style="width: auto; padding: 2px 6px; font-size: 8px; font-family: 'WhFont', cursive; background:black; color:white; border: 2px solid white; cursor: pointer; outline: none;">⏸ DURDUR</button>
+                        <span id="shopMusicTitle" style="font-family: 'WhFont', cursive !important; color: #ffffff !important; font-size: 9px !important;">🎵 Shop</span>
+                        <button id="shopBgMusicBtn" onclick="toggleBgMusic()" style="width: auto; padding: 2px 6px; font-size: 8px !important; font-family: 'WhFont', cursive !important; background:black; color:white !important; border: 2px solid white; cursor: pointer; outline: none;">⏸ DURDUR</button>
                     </div>
                     <div class="volume-control">
-                        <label style="margin:0; font-size:7px;">Ses:</label>
+                        <label style="margin:0; font-size:7px !important;">Ses:</label>
                         <input type="range" id="shopVolumeSlider" min="0" max="1" step="0.01" value="0.3" oninput="changeVolume(this.value)" style="cursor: pointer; height: 10px;">
                     </div>
                 </div>
             </div>
 
             <div class="shop-select-card">
-                <label style="font-family: 'WhFont', cursive; font-size: 9px; color: #ffff00; margin-bottom: 8px;">KONU ANALİZİ SEÇ:</label>
+                <label style="font-family: 'WhFont', cursive !important; font-size: 9px !important; color: #ffff00 !important; margin-bottom: 8px;">KONU ANALİZİ SEÇ:</label>
                 <select id="konuSecimSelect" onchange="konuAnalizGoster(this.value)">
                     <option value="">* Bir konu seçin...</option>
                 </select>
@@ -617,7 +617,7 @@
         </div>
 
         <div class="card" id="listeEkrani">
-            <h3>📂 KAYITLI DENEMELERİM <span style="font-size:7px; color:#aaa; font-weight:normal; display:block; margin-top:5px;">(Silmek için sağa kaydırın)</span></h3>
+            <h3>📂 KAYITLI DENEMELERİM <span style="font-size:7px !important; color:#aaa !important; font-weight:normal; display:block; margin-top:5px; font-family:'WhFont', cursive !important;">(Silmek için sağa kaydırın)</span></h3>
             <div id="denemeListesi"></div>
         </div>
 
@@ -998,7 +998,7 @@
             const isimler = Object.keys(tumDenemeler);
 
             if (isimler.length === 0) {
-                listeDiv.innerHTML = "<p style='color:#777; font-size:10px; font-family:\"WhFont\", cursive; padding: 10px;'>Henüz kayıtlı deneme yok.</p>";
+                listeDiv.innerHTML = "<p style='color:#777; font-size:10px !important; font-family:\"WhFont\", cursive !important; padding: 10px;'>Henüz kayıtlı deneme yok.</p>";
                 return;
             }
 
@@ -1021,7 +1021,7 @@
 
                 const btn = document.createElement('div');
                 btn.className = "swipe-btn";
-                btn.innerHTML = `<span>${siraNo}. 📘 ${isim} <span style="font-size:8px; color:#aaa; font-weight:normal;">(${maxSoru} Soru)</span></span> <span style="font-size:9px; color:#ffff00;">%${denemeBasariOrani} ❯</span>`;
+                btn.innerHTML = `<span>${siraNo}. 📘 ${isim} <span style="font-size:8px !important; color:#aaa !important; font-weight:normal;">(${maxSoru} Soru)</span></span> <span style="font-size:9px !important; color:#ffff00 !important;">%${denemeBasariOrani} ❯</span>`;
                 
                 makeSwipeable(btn, () => {
                     if (confirm(`"${isim}" adlı denemeyi silmek istediğine emin misin?`)) {
@@ -1093,7 +1093,7 @@
 
                 const dersHeaderBtn = document.createElement('button');
                 dersHeaderBtn.className = "swipe-btn ders-header-content";
-                dersHeaderBtn.innerHTML = `<span>📚 ${dersAdi} (${dersVerisi.dersToplamSoru} Soru)</span> <span style="font-size:9px; color:#ffff00;">%${dersBasari} ▼</span>`;
+                dersHeaderBtn.innerHTML = `<span>📚 ${dersAdi} (${dersVerisi.dersToplamSoru} Soru)</span> <span style="font-size:9px !important; color:#ffff00 !important;">%${dersBasari} ▼</span>`;
 
                 makeSwipeable(dersHeaderBtn, () => {
                     if (confirm(`"${dersAdi}" dersini silmek istiyor musun?`)) {
@@ -1136,7 +1136,7 @@
 
                     const konuHeaderBtn = document.createElement('button');
                     konuHeaderBtn.className = "swipe-btn konu-header";
-                    konuHeaderBtn.innerHTML = `<span>📌 ${konuItem.konu}</span> <span style="font-size:8px; color:#aaa;" id="konu-btn-txt-${idx}">▶ Göster</span>`;
+                    konuHeaderBtn.innerHTML = `<span>📌 ${konuItem.konu}</span> <span style="font-size:8px !important; color:#aaa !important;" id="konu-btn-txt-${idx}">▶ Göster</span>`;
 
                     makeSwipeable(konuHeaderBtn, () => {
                         if (confirm(`"${konuItem.konu}" konusunu silmek istiyor musun?`)) {
@@ -1157,11 +1157,11 @@
                         <div class="chart-box">
                             <canvas id="${cId}" width="150" height="140"></canvas>
                         </div>
-                        <div style="font-size:9px; text-align:center; color:#ffff00; margin-top:5px; font-family:'WhFont', cursive;">
+                        <div style="font-size:9px !important; text-align:center; color:#ffff00 !important; margin-top:5px; font-family:'WhFont', cursive !important;">
                             Başarı: %${konuItem.oran}
                         </div>
-                        <div style="font-size:8px; text-align:center; color:#ccc; margin-top:3px; font-family:'WhFont', cursive;">
-                            <b>Soru:</b> ${konuItem.toplam} | <span style="color:#00c000">D:${konuItem.dogru}</span> | <span style="color:#ff0000">Y:${konuItem.yanlis}</span> | <span style="color:#888">B:${konuItem.bos}</span>
+                        <div style="font-size:8px !important; text-align:center; color:#ccc !important; margin-top:3px; font-family:'WhFont', cursive !important;">
+                            <b>Soru:</b> ${konuItem.toplam} | <span style="color:#00c000 !important">D:${konuItem.dogru}</span> | <span style="color:#ff0000 !important">Y:${konuItem.yanlis}</span> | <span style="color:#888 !important">B:${konuItem.bos}</span>
                         </div>
                         <div class="undertale-box">
                             <img id="${imgId}" src="${TORIEL_RESIM_1}" class="toriel-avatar" alt="Toriel">
@@ -1434,9 +1434,9 @@
                 torielAudio.pause();
                 torielAudio.currentTime = 0;
             }
-            if (sansVoice) {
-                sansVoice.pause();
-                sansVoice.currentTime = 0;
+            if (sansAudio) {
+                sansAudio.pause();
+                sansAudio.currentTime = 0;
             }
         }
 
@@ -1496,7 +1496,7 @@
                 torielAudio.play().catch(e => {});
             }
 
-            aktifYaxiciTimer = setInterval(() => {
+            aktifYaziciTimer = setInterval(() => {
                 if (i < text.length) {
                     const char = text.charAt(i);
                     textContainer.innerText += char;
@@ -1504,7 +1504,7 @@
 
                     if (char !== ' ' && char !== '\n') {
                         toggleState = !toggleState;
-                        imgElement.src = toggleState ? TORIEL_RESIM_2 : TORIEL_RESIM_1;
+                        imgElement.src = toggleState ? TORIEL_RES_2 : TORIEL_RESIM_1;
                     }
                 } else {
                     clearInterval(aktifYaziciTimer);
