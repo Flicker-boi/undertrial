@@ -755,28 +755,6 @@
         let barHitboxes = [];
         let secilenNikDenemeIsmi = "";
 
-        // Arkaplana alınca müziğin kesilmesi ve geri dönünce devam etmesi için Visibility API
-        document.addEventListener("visibilitychange", function() {
-            const bgAudio = document.getElementById('bgAudio');
-            const wewAudio = document.getElementById('wewAudio');
-            const torielVoice = document.getElementById('torielVoice');
-            const sansVoice = document.getElementById('sansVoice');
-
-            if (document.hidden) {
-                // Sekme arkaplana alındı -> sesleri durdur
-                if (!bgAudio.paused) bgAudio.pause();
-                if (!wewAudio.paused) wewAudio.pause();
-                if (!torielVoice.paused) torielVoice.pause();
-                if (!sansVoice.paused) sansVoice.pause();
-            } else {
-                // Sekmeye geri dönüldü -> kullanıcı daha önce manuel durdurmadıysa müzikleri devam ettir
-                if (!userPausedMusic) {
-                    if (isMusicPlaying && bgAudio.paused) bgAudio.play().catch(e => {});
-                    if (isWewPlaying && wewAudio.paused) wewAudio.play().catch(e => {});
-                }
-            }
-        });
-
         window.onload = function() {
             const welcomeText = "* Merhaba evladım...\n* Deneme takip sistemine hoş geldin.\n* Başlamak için aşağıdaki düğmeye basabilirsin.";
             typeWriterWelcome("welcomeDialogue", "welcomeTorielImg", welcomeText);
@@ -1002,7 +980,7 @@
             const imgElement = document.getElementById(imgId);
             if (!textContainer || !imgElement || !text) return;
             textContainer.innerText = "";
-            imgElement.src = TORIEL_IMG_1; // Toriel resmi düzeltildi (hoş.png yerine TORIEL_IMG_1 kullanıldı)
+            imgElement.src = TORIEL_IMG_1;
 
             let toggleImg = false;
             aktifYaziciTimer = setInterval(() => {
