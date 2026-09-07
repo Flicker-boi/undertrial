@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Undertale - Deneme Takip</title>
     <link rel="icon" type="image/png" href="nn.png">
     <link rel="manifest" href="./manifest.json">
@@ -19,12 +19,14 @@
         body { 
             font-family: 'WhFont', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important; 
             max-width: 600px; 
+            width: 100%;
             margin: 0 auto; 
-            padding: 20px; 
+            padding: 12px; 
             background: #000 url('neden.gif') no-repeat center center fixed; 
             background-size: cover; 
             color: white !important; 
             user-select: none;
+            box-sizing: border-box;
         }
         
         body.kaka-bg {
@@ -55,8 +57,8 @@
             background: black; 
             border: 4px solid white; 
             border-radius: 5px; 
-            padding: 20px; 
-            margin-bottom: 20px; 
+            padding: 15px; 
+            margin-bottom: 15px; 
             box-sizing: border-box;
             width: 100%;
             transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
@@ -114,20 +116,20 @@
         h3 { 
             margin-top: 0; 
             color: #ffff00 !important; 
-            font-size: 15px !important; 
+            font-size: 14px !important; 
             font-family: 'WhFont', cursive !important; 
             text-shadow: 2px 2px #333;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
-        .form-group { margin-bottom: 15px; }
+        .form-group { margin-bottom: 12px; }
         
         label { 
             display: block; 
-            font-size: 12px !important; 
+            font-size: 11px !important; 
             font-family: 'WhFont', cursive !important;
             color: #ffffff !important; 
-            margin-bottom: 6px; 
+            margin-bottom: 5px; 
         }
 
         input, select { 
@@ -138,24 +140,24 @@
             color: white !important; 
             border-radius: 0px; 
             box-sizing: border-box; 
-            font-size: 13px !important; 
+            font-size: 12px !important; 
             font-family: 'WhFont', cursive !important;
             user-select: text; 
             outline: none;
         }
         input:focus, select:focus { border-color: #ffff00; }
 
-        .row { display: flex; gap: 10px; }
+        .row { display: flex; gap: 8px; }
 
         .start-text-btn {
             background: none;
             border: none;
             color: #ffffff !important;
             font-family: 'WhFont', cursive !important;
-            font-size: 15px !important;
+            font-size: 14px !important;
             cursor: pointer;
             padding: 10px;
-            margin-top: 10px;
+            margin-top: 8px;
             width: 100%;
             text-align: left;
             transition: color 0.2s, transform 0.2s;
@@ -168,15 +170,15 @@
 
         .top-bar {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 15px;
             align-items: stretch;
             transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
         }
 
         #bbTopBar {
             display: none;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             align-items: stretch;
             opacity: 0;
             pointer-events: none;
@@ -192,7 +194,7 @@
         .music-panel { 
             background: black; 
             border: 4px solid white; 
-            padding: 8px 12px; 
+            padding: 8px 10px; 
             border-radius: 5px; 
             display: flex; 
             flex-direction: column; 
@@ -218,8 +220,8 @@
         }
         .lan-btn:hover { transform: scale(1.05); }
         .lan-btn img {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             object-fit: visible;
             image-rendering: pixelated;
         }
@@ -247,18 +249,18 @@
         .shop-controls {
             display: none;
             flex-direction: column;
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 15px;
         }
         .shop-controls.show { display: flex; }
 
-        .shop-top-row { display: flex; gap: 10px; align-items: stretch; }
+        .shop-top-row { display: flex; gap: 8px; align-items: stretch; }
 
         .shop-select-card {
             background: black;
             border: 4px solid white;
             border-radius: 5px;
-            padding: 15px;
+            padding: 12px;
             box-sizing: border-box;
             width: 100%;
         }
@@ -267,29 +269,29 @@
             background: black;
             border: 4px solid white;
             border-radius: 5px;
-            padding: 20px;
+            padding: 15px;
             box-sizing: border-box;
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
         }
 
         .sans-box {
             background: black;
             border: 4px solid white;
             border-radius: 5px;
-            padding: 15px;
+            padding: 12px;
             display: flex;
-            gap: 15px;
+            gap: 12px;
             align-items: flex-start;
             width: 100%;
             box-sizing: border-box;
         }
         .shop-dialogue-text {
             font-family: 'NoteThis', sans-serif !important;
-            font-size: 18px !important;
-            line-height: 1.6;
+            font-size: 16px !important;
+            line-height: 1.5;
             color: #ffffff !important;
             flex: 1;
             min-width: 0;
@@ -311,14 +313,14 @@
             left: 0; 
             top: 0; 
             bottom: 0; 
-            width: 100px; 
+            width: 90px; 
             background: #f44336; 
             color: white !important; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
             font-weight: bold; 
-            font-size: 12px !important; 
+            font-size: 11px !important; 
             z-index: 1; 
             font-family: 'WhFont', cursive !important; 
         }
@@ -328,14 +330,14 @@
             right: 0; 
             top: 0; 
             bottom: 0; 
-            width: 100px; 
+            width: 90px; 
             background: #2196F3; 
             color: white !important; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
             font-weight: bold; 
-            font-size: 12px !important; 
+            font-size: 11px !important; 
             z-index: 1; 
             font-family: 'WhFont', cursive !important; 
         }
@@ -346,10 +348,10 @@
             color: white !important; 
             border: 2px solid white; 
             text-align: left; 
-            padding: 14px; 
+            padding: 12px; 
             border-radius: 5px; 
             font-family: 'WhFont', cursive !important;
-            font-size: 12px !important;
+            font-size: 11px !important;
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
@@ -363,16 +365,16 @@
         }
         .swipe-btn:hover { background: #111; border-color: #ffff00; }
 
-        .ders-block { background: black; border: 4px solid white; border-radius: 5px; margin-bottom: 10px; overflow: hidden; }
+        .ders-block { background: black; border: 4px solid white; border-radius: 5px; margin-bottom: 8px; overflow: hidden; }
         
         .ders-header-content { 
             background: black; 
-            padding: 12px; 
+            padding: 10px; 
             color: #ffffff !important; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            font-size: 12px !important; 
+            font-size: 11px !important; 
             width: 100%; 
             cursor: pointer; 
             border: 2px solid white; 
@@ -382,11 +384,11 @@
             box-sizing: border-box;
             outline: none;
         }
-        .ders-icerik { display: none; padding: 10px; background: #050505; }
+        .ders-icerik { display: none; padding: 8px; background: #050505; }
 
         .konu-header { 
-            padding: 10px; 
-            font-size: 11px !important; 
+            padding: 9px; 
+            font-size: 10px !important; 
             font-family: 'WhFont', cursive !important;
             color: #fff !important; 
             display: flex; 
@@ -401,32 +403,32 @@
             box-sizing: border-box;
             outline: none;
         }
-        .konu-detay { display: none; padding: 12px; background: black; border: 2px dashed #666; margin-top: 5px; border-radius: 5px; }
+        .konu-detay { display: none; padding: 10px; background: black; border: 2px dashed #666; margin-top: 4px; border-radius: 5px; }
 
         .undertale-box { 
             background: black; 
             border: 4px solid white; 
             border-radius: 5px; 
-            padding: 12px; 
+            padding: 10px; 
             display: flex; 
-            gap: 12px; 
+            gap: 10px; 
             align-items: flex-start; 
-            margin-top: 10px; 
-            min-height: 80px;
+            margin-top: 8px; 
+            min-height: 70px;
             box-sizing: border-box;
             width: 100%;
         }
         .toriel-avatar { 
-            width: 55px; 
-            height: 55px; 
+            width: 48px; 
+            height: 48px; 
             object-fit: contain; 
             flex-shrink: 0; 
             image-rendering: pixelated; 
         }
         .dialogue-text { 
             font-family: 'WhFont', cursive !important; 
-            font-size: 11px !important; 
-            line-height: 2.0; 
+            font-size: 10px !important; 
+            line-height: 1.8; 
             color: #ffffff !important; 
             flex: 1; 
             min-width: 0;
@@ -435,19 +437,19 @@
         }
 
         .chart-box { 
-            width: 160px; 
-            height: 160px; 
-            margin: 10px auto; 
+            width: 140px; 
+            height: 140px; 
+            margin: 8px auto; 
             position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
         }
         .chart-box canvas {
-            width: 140px;
-            height: 140px;
+            width: 130px;
+            height: 130px;
             position: absolute;
-            top: 10px; left: 10px;
+            top: 5px; left: 5px;
             image-rendering: pixelated;
         }
 
@@ -455,21 +457,21 @@
             width: 100%;
             background: #000;
             border: 2px solid white;
-            padding: 12px 8px 8px 8px;
+            padding: 10px 6px 6px 6px;
             box-sizing: border-box;
-            margin-top: 10px;
+            margin-top: 8px;
             border-radius: 4px;
         }
         .bar-chart-title {
             font-family: 'WhFont', cursive !important;
-            font-size: 10px !important;
+            font-size: 9px !important;
             color: #ffff00 !important;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             text-align: center;
         }
         .bar-chart-canvas-box {
             width: 100%;
-            height: 150px;
+            height: 140px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -484,8 +486,8 @@
             border: 2px solid white;
             color: #ffff00 !important;
             font-family: 'WhFont', cursive !important;
-            font-size: 9px !important;
-            padding: 4px 6px;
+            font-size: 8px !important;
+            padding: 3px 5px;
             z-index: 99;
             pointer-events: none;
             white-space: nowrap;
@@ -497,8 +499,8 @@
             color: white !important; 
             border: 2px solid white;
             width: auto; 
-            padding: 8px 12px; 
-            font-size: 11px !important; 
+            padding: 6px 10px; 
+            font-size: 10px !important; 
             font-family: 'WhFont', cursive !important;
             cursor: pointer;
             outline: none;
@@ -515,7 +517,7 @@
             align-items: center;
             z-index: 9999;
             box-sizing: border-box;
-            padding: 20px;
+            padding: 15px;
             transition: opacity 0.8s ease;
         }
         .welcome-container { max-width: 450px; width: 100%; text-align: center; }
@@ -548,8 +550,8 @@
     <!-- başlangıç ekranı -->
     <div id="welcomeScreen">
         <div class="welcome-container">
-            <div class="undertale-box" style="margin-bottom: 20px; text-align: left;">
-                <img id="welcomeTorielImg" src="https://i.ibb.co/bgVjVpPK/toriel.png" onerror="this.src='https://i.ibb.co/bgVjVpPK/toriel.png'" class="toriel-avatar" alt="Hos">
+            <div class="undertale-box" style="margin-bottom: 15px; text-align: left;">
+                <img id="welcomeTorielImg" src="https://i.ibb.co/bgVjVpPK/toriel.png" class="toriel-avatar" alt="Hos">
                 <div id="welcomeDialogue" class="dialogue-text"></div>
             </div>
             <button id="startAppBtn" class="start-text-btn" onclick="baslatUygulama()">* BAŞLA</button>
@@ -564,22 +566,22 @@
             <button class="bb-return-btn" onclick="goBackFromBbBg()">← GERİ DÖN</button>
             <div class="music-panel">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-family: 'WhFont', cursive !important; color: #ffffff !important; font-size: 11px !important;">🎵 Wew</span>
-                    <button id="wewMusicBtn" onclick="toggleWewMusic()" style="width: auto; padding: 2px 6px; font-size: 10px !important; font-family: 'WhFont', cursive !important; background:black; color:white !important; border: 2px solid white; cursor: pointer; outline: none;">⏸ DURDUR</button>
+                    <span style="font-family: 'WhFont', cursive !important; color: #ffffff !important; font-size: 10px !important;">🎵 Wew</span>
+                    <button id="wewMusicBtn" onclick="toggleWewMusic()" style="width: auto; padding: 2px 5px; font-size: 9px !important; font-family: 'WhFont', cursive !important; background:black; color:white !important; border: 2px solid white; cursor: pointer; outline: none;">⏸ DURDUR</button>
                 </div>
                 <div class="volume-control">
-                    <label style="margin:0; font-size:9px !important;">Ses:</label>
-                    <input type="range" id="wewVolumeSlider" min="0" max="1" step="0.01" value="0.3" oninput="changeWewVolume(this.value)" style="cursor: pointer; height: 10px;">
+                    <label style="margin:0; font-size:8px !important;">Ses:</label>
+                    <input type="range" id="wewVolumeSlider" min="0" max="1" step="0.01" value="0.3" oninput="changeWewVolume(this.value)" style="cursor: pointer; height: 8px;">
                 </div>
             </div>
         </div>
 
-        <!-- bb.gif arka planındayken rapor alanı -->
+        <!-- bb.gif arka planındayken rapor alanı (hoş.png eklendi) -->
         <div id="bbContentArea">
             <div class="card">
                 <h3>📜 DENEME RAPORU</h3>
-                <div class="undertale-box" style="margin-top: 10px;">
-                    <img id="bbHosImg" src="hoş.png" onerror="this.src='https://i.ibb.co/bgVjVpPK/toriel.png'" class="toriel-avatar" alt="Hos">
+                <div class="undertale-box" style="margin-top: 8px;">
+                    <img id="bbHosImg" src="hoş.png" class="toriel-avatar" alt="Hos">
                     <div id="bbDialogue" class="dialogue-text"></div>
                 </div>
             </div>
@@ -588,12 +590,12 @@
         <div class="top-bar" id="normalTopBar">
             <div class="music-panel">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span id="musicTitle" style="font-family: 'WhFont', cursive !important; color: #ffffff !important; font-size: 11px !important;">🎵 Fallen Down</span>
-                    <button id="bgMusicBtn" onclick="toggleBgMusic()" style="width: auto; padding: 2px 6px; font-size: 10px !important; font-family: 'WhFont', cursive !important; background:black; color:white !important; border: 2px solid white; cursor: pointer; outline: none;">⏸ DURDUR</button>
+                    <span id="musicTitle" style="font-family: 'WhFont', cursive !important; color: #ffffff !important; font-size: 10px !important;">🎵 Fallen Down</span>
+                    <button id="bgMusicBtn" onclick="toggleBgMusic()" style="width: auto; padding: 2px 5px; font-size: 9px !important; font-family: 'WhFont', cursive !important; background:black; color:white !important; border: 2px solid white; cursor: pointer; outline: none;">⏸ DURDUR</button>
                 </div>
                 <div class="volume-control">
-                    <label style="margin:0; font-size:9px !important;">Ses:</label>
-                    <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.3" oninput="changeVolume(this.value)" style="cursor: pointer; height: 10px;">
+                    <label style="margin:0; font-size:8px !important;">Ses:</label>
+                    <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.3" oninput="changeVolume(this.value)" style="cursor: pointer; height: 8px;">
                 </div>
             </div>
             <div class="lan-btn" onclick="goToKakaBg()" title="Özel Arka Plana Git">
@@ -606,35 +608,35 @@
                 <button id="backMapBtn" class="back-map-btn show" onclick="goBackFromKakaBg()">← GERİ DÖN</button>
                 <div class="music-panel">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <span id="shopMusicTitle" style="font-family: 'WhFont', cursive !important; color: #ffffff !important; font-size: 11px !important;">🎵 Shop</span>
-                        <button id="shopBgMusicBtn" onclick="toggleBgMusic()" style="width: auto; padding: 2px 6px; font-size: 10px !important; font-family: 'WhFont', cursive !important; background:black; color:white !important; border: 2px solid white; cursor: pointer; outline: none;">⏸ DURDUR</button>
+                        <span id="shopMusicTitle" style="font-family: 'WhFont', cursive !important; color: #ffffff !important; font-size: 10px !important;">🎵 Shop</span>
+                        <button id="shopBgMusicBtn" onclick="toggleBgMusic()" style="width: auto; padding: 2px 5px; font-size: 9px !important; font-family: 'WhFont', cursive !important; background:black; color:white !important; border: 2px solid white; cursor: pointer; outline: none;">⏸ DURDUR</button>
                     </div>
                     <div class="volume-control">
-                        <label style="margin:0; font-size:9px !important;">Ses:</label>
-                        <input type="range" id="shopVolumeSlider" min="0" max="1" step="0.01" value="0.3" oninput="changeVolume(this.value)" style="cursor: pointer; height: 10px;">
+                        <label style="margin:0; font-size:8px !important;">Ses:</label>
+                        <input type="range" id="shopVolumeSlider" min="0" max="1" step="0.01" value="0.3" oninput="changeVolume(this.value)" style="cursor: pointer; height: 8px;">
                     </div>
                 </div>
             </div>
 
             <!-- TYT / AYT Ders Bazlı Hedef Net Belirleme Kartı -->
             <div class="shop-select-card">
-                <label style="font-family: 'WhFont', cursive !important; font-size: 11px !important; color: #ffff00 !important; margin-bottom: 8px;">🎯 TYT / AYT DERS HEDEFLERİ:</label>
-                <div class="row" style="margin-bottom: 8px;">
+                <label style="font-family: 'WhFont', cursive !important; font-size: 10px !important; color: #ffff00 !important; margin-bottom: 6px;">🎯 TYT / AYT DERS HEDEFLERİ:</label>
+                <div class="row" style="margin-bottom: 6px;">
                     <input type="text" id="hedefDersAdi" placeholder="Ders Adı (Örn: Matematik)" style="flex: 2;">
                     <select id="hedefDersTuru" style="flex: 1;">
                         <option value="TYT">TYT</option>
                         <option value="AYT">AYT</option>
                     </select>
                 </div>
-                <div class="row" style="margin-bottom: 8px;">
+                <div class="row" style="margin-bottom: 6px;">
                     <input type="number" id="hedefDersNet" placeholder="Hedef Net (Örn: 30)" style="flex: 2;">
-                    <button class="back-btn" onclick="hedefDersEkle()" style="flex: 1; font-size:10px !important;">HEDEF EKLE</button>
+                    <button class="back-btn" onclick="hedefDersEkle()" style="flex: 1; font-size:9px !important;">HEDEF EKLE</button>
                 </div>
-                <div id="hedefDersListesi" style="margin-top: 10px; max-height: 120px; overflow-y: auto; font-size: 10px; font-family: 'WhFont', cursive !important;"></div>
+                <div id="hedefDersListesi" style="margin-top: 8px; max-height: 100px; overflow-y: auto; font-size: 9px; font-family: 'WhFont', cursive !important;"></div>
             </div>
 
             <div class="shop-select-card">
-                <label style="font-family: 'WhFont', cursive !important; font-size: 11px !important; color: #ffff00 !important; margin-bottom: 8px;">KONU ANALİZİ SEÇ:</label>
+                <label style="font-family: 'WhFont', cursive !important; font-size: 10px !important; color: #ffff00 !important; margin-bottom: 6px;">KONU ANALİZİ SEÇ:</label>
                 <select id="konuSecimSelect" onchange="konuAnalizGoster(this.value)">
                     <option value="">* Bir konu seçin...</option>
                 </select>
@@ -642,13 +644,13 @@
 
             <div class="shop-dialogue-card">
                 <div class="chart-box" id="shopChartContainer" style="display:none;">
-                    <canvas id="shopCanvas" width="150" height="140"></canvas>
+                    <canvas id="shopCanvas" width="140" height="130"></canvas>
                 </div>
                 
                 <div class="bar-chart-container" id="barChartCardContainer" style="display:none;">
                     <div class="bar-chart-title">DENEMELERE GÖRE DOĞRU / YANLIŞ / BOŞ</div>
                     <div class="bar-chart-canvas-box" id="barCanvasBox">
-                        <canvas id="barCanvas" width="400" height="150"></canvas>
+                        <canvas id="barCanvas" width="400" height="140"></canvas>
                         <div id="chartTooltip"></div>
                     </div>
                 </div>
@@ -721,16 +723,16 @@
         </div>
 
         <div class="card" id="formUyariKutusu" style="display: none; border-color: #ff0000;">
-            <div style="font-family: 'WhFont', cursive !important; font-size: 11px !important; color: #ff5555 !important; line-height: 1.8;" id="formUyariMetin"></div>
+            <div style="font-family: 'WhFont', cursive !important; font-size: 10px !important; color: #ff5555 !important; line-height: 1.6;" id="formUyariMetin"></div>
         </div>
 
         <div class="card" id="listeEkrani">
-            <h3>📂 KAYITLI DENEMELERİM <span style="font-size:9px !important; color:#aaa !important; font-weight:normal; display:block; margin-top:5px; font-family:'WhFont', cursive !important;">(Sağa sil, sola nik.mp4)</span></h3>
+            <h3>📂 KAYITLI DENEMELERİM <span style="font-size:8px !important; color:#aaa !important; font-weight:normal; display:block; margin-top:4px; font-family:'WhFont', cursive !important;">(Sağa sil, sola nik.mp4)</span></h3>
             <div id="denemeListesi"></div>
         </div>
 
         <div class="card" id="detayEkrani" style="display: none;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                 <h3 id="detayBaslik" style="margin:0;">-</h3>
                 <button class="back-btn" onclick="listeyeDon()">← Geri</button>
             </div>
@@ -755,7 +757,6 @@
         let barHitboxes = [];
         let secilenNikDenemeIsmi = "";
 
-        // Arkaplana alınca müziğin kesilmesi ve geri dönünce devam etmesi için Visibility API
         document.addEventListener("visibilitychange", function() {
             const bgAudio = document.getElementById('bgAudio');
             const wewAudio = document.getElementById('wewAudio');
@@ -763,13 +764,11 @@
             const sansVoice = document.getElementById('sansVoice');
 
             if (document.hidden) {
-                // Sekme arkaplana alındı -> sesleri durdur
                 if (!bgAudio.paused) bgAudio.pause();
                 if (!wewAudio.paused) wewAudio.pause();
                 if (!torielVoice.paused) torielVoice.pause();
                 if (!sansVoice.paused) sansVoice.pause();
             } else {
-                // Sekmeye geri dönüldü -> kullanıcı daha önce manuel durdurmadıysa müzikleri devam ettir
                 if (!userPausedMusic) {
                     if (isMusicPlaying && bgAudio.paused) bgAudio.play().catch(e => {});
                     if (isWewPlaying && wewAudio.paused) wewAudio.play().catch(e => {});
@@ -833,7 +832,7 @@
                 row.style.justifyContent = "space-between";
                 row.style.alignItems = "center";
                 row.style.marginBottom = "4px";
-                row.innerHTML = `<span>[${item.turu}] ${ders}: <b style="color:#ffff00">${item.net} Net</b></span> <button onclick="hedefDersSil('${ders}')" style="background:black; color:#ff5555; border:1px solid #ff5555; cursor:pointer; font-size:9px; padding:2px 4px;">X</button>`;
+                row.innerHTML = `<span>[${item.turu}] ${ders}: <b style="color:#ffff00">${item.net} Net</b></span> <button onclick="hedefDersSil('${ders}')" style="background:black; color:#ff5555; border:1px solid #ff5555; cursor:pointer; font-size:8px; padding:2px 4px;">X</button>`;
                 listeDiv.appendChild(row);
             });
         }
@@ -1000,9 +999,16 @@
             let i = 0;
             const textContainer = document.getElementById(elementId);
             const imgElement = document.getElementById(imgId);
+            const torielVoice = document.getElementById('torielVoice');
             if (!textContainer || !imgElement || !text) return;
             textContainer.innerText = "";
-            imgElement.src = TORIEL_IMG_1; // Toriel resmi düzeltildi (hoş.png yerine TORIEL_IMG_1 kullanıldı)
+            imgElement.src = "hoş.png"; // İstediğin gibi hoş.png yapıldı
+
+            if (torielVoice) {
+                torielVoice.loop = true;
+                torielVoice.currentTime = 0;
+                torielVoice.play().catch(e => {});
+            }
 
             let toggleImg = false;
             aktifYaziciTimer = setInterval(() => {
@@ -1010,13 +1016,14 @@
                     textContainer.innerText += text.charAt(i);
                     if (text.charAt(i).trim() !== "") {
                         toggleImg = !toggleImg;
-                        imgElement.src = toggleImg ? TORIEL_IMG_2 : TORIEL_IMG_1;
+                        imgElement.src = toggleImg ? TORIEL_IMG_2 : "hoş.png";
                     }
                     i++;
                 } else {
                     clearInterval(aktifYaziciTimer);
                     aktifYaziciTimer = null;
-                    imgElement.src = TORIEL_IMG_1;
+                    imgElement.src = "hoş.png";
+                    if (torielVoice) { torielVoice.pause(); torielVoice.currentTime = 0; }
                 }
             }, 40);
         }
@@ -1193,9 +1200,9 @@
                 document.removeEventListener('touchmove', touchMove);
                 document.removeEventListener('touchend', touchEnd);
 
-                if (currentTranslate > 100) {
+                if (currentTranslate > 90) {
                     onDeleteCallback();
-                } else if (currentTranslate < -100) {
+                } else if (currentTranslate < -90) {
                     onLeftSwipeCallback();
                 } else {
                     currentTranslate = 0;
@@ -1325,7 +1332,7 @@
             const isimler = Object.keys(tumDenemeler);
 
             if (isimler.length === 0) {
-                listeDiv.innerHTML = "<p style='color:#777; font-size:11px !important; font-family:\"WhFont\", cursive !important; padding: 10px;'>Henüz kayıtlı deneme yok.</p>";
+                listeDiv.innerHTML = "<p style='color:#777; font-size:10px !important; font-family:\"WhFont\", cursive !important; padding: 8px;'>Henüz kayıtlı deneme yok.</p>";
                 return;
             }
 
@@ -1368,7 +1375,7 @@
                 const btn = document.createElement('div');
                 btn.className = "swipe-btn";
                 
-                btn.innerHTML = `<span>${siraNo}. 📘 ${isim} <span style="font-size:9px !important; color:#aaa !important; font-weight:normal; display:block; margin-top:2px;">[${turu} - ${tarihi}] | Net: <b style="color:#ffff00">${toplamNet}</b></span></span> <span style="font-size:11px !important; color:#ffff00 !important;">%${denemeBasariOrani} ❯</span>`;
+                btn.innerHTML = `<span>${siraNo}. 📘 ${isim} <span style="font-size:8px !important; color:#aaa !important; font-weight:normal; display:block; margin-top:2px;">[${turu} - ${tarihi}] | Net: <b style="color:#ffff00">${toplamNet}</b></span></span> <span style="font-size:10px !important; color:#ffff00 !important;">%${denemeBasariOrani} ❯</span>`;
                 
                 makeDualSwipeable(btn, () => {
                     if (confirm(`"${isim}" adlı denemeyi silmek istediğine emin misin?`)) {
@@ -1406,7 +1413,7 @@
             let turu = (bilgi && typeof bilgi === 'object') ? bilgi.turu : "TYT";
             let tarihi = (bilgi && typeof bilgi === 'object') ? bilgi.tarih : "-";
 
-            document.getElementById('detayBaslik').innerHTML = `${denemeIsmi} <span style="font-size:10px; color:#aaa; font-weight:normal;">[${turu} - ${tarihi}]</span>`;
+            document.getElementById('detayBaslik').innerHTML = `${denemeIsmi} <span style="font-size:9px; color:#aaa; font-weight:normal;">[${turu} - ${tarihi}]</span>`;
 
             const anaDiv = document.getElementById('dersGörünümü');
             anaDiv.innerHTML = "";
@@ -1435,7 +1442,7 @@
 
                 const dersHeaderBtn = document.createElement('button');
                 dersHeaderBtn.className = "ders-header-content";
-                dersHeaderBtn.innerHTML = `<span>📚 ${dersAdi} | Net: <b style="color:#ffff00">${dersNet}</b></span> <span style="font-size:11px !important; color:#ffff00 !important;">%${dersBasari} ▼</span>`;
+                dersHeaderBtn.innerHTML = `<span>📚 ${dersAdi} | Net: <b style="color:#ffff00">${dersNet}</b></span> <span style="font-size:10px !important; color:#ffff00 !important;">%${dersBasari} ▼</span>`;
                 dersHeaderBtn.onclick = () => toggleDers(dersHeaderBtn);
                 dersBlock.appendChild(dersHeaderBtn);
 
@@ -1460,7 +1467,7 @@
 
                     const konuHeaderBtn = document.createElement('button');
                     konuHeaderBtn.className = "konu-header";
-                    konuHeaderBtn.innerHTML = `<span>📌 ${konuItem.konu} (Net: ${konuNet})</span> <span style="font-size:10px !important; color:#aaa !important;" id="konu-btn-txt-${idx}">▶ Göster</span>`;
+                    konuHeaderBtn.innerHTML = `<span>📌 ${konuItem.konu} (Net: ${konuNet})</span> <span style="font-size:9px !important; color:#aaa !important;" id="konu-btn-txt-${idx}">▶ Göster</span>`;
                     
                     konuHeaderBtn.onclick = () => toggleKonu(idx, cId, dialogId, imgId, encodeURIComponent(guvenliMesaj), konuItem.dogru, konuItem.yanlis, konuItem.bos, konuHeaderBtn);
 
@@ -1468,9 +1475,9 @@
                     detayIcerikDiv.className = "konu-detay";
                     detayIcerikDiv.id = `konu-detay-${idx}`;
                     detayIcerikDiv.innerHTML = `
-                        <div class="chart-box"><canvas id="${cId}" width="150" height="140"></canvas></div>
-                        <div style="font-size:11px !important; text-align:center; color:#ffff00 !important; margin-top:5px; font-family:'WhFont', cursive !important;">Başarı: %${konuItem.oran} | Net: ${konuNet}</div>
-                        <div style="font-size:10px !important; text-align:center; color:#ccc !important; margin-top:3px; font-family:'WhFont', cursive !important;"><b>Soru:</b> ${konuItem.toplam} | <span style="color:#00c000 !important">D:${konuItem.dogru}</span> | <span style="color:#ff0000 !important">Y:${konuItem.yanlis}</span> | <span style="color:#888 !important">B:${konuItem.bos}</span></div>
+                        <div class="chart-box"><canvas id="${cId}" width="130" height="130"></canvas></div>
+                        <div style="font-size:10px !important; text-align:center; color:#ffff00 !important; margin-top:4px; font-family:'WhFont', cursive !important;">Başarı: %${konuItem.oran} | Net: ${konuNet}</div>
+                        <div style="font-size:9px !important; text-align:center; color:#ccc !important; margin-top:2px; font-family:'WhFont', cursive !important;"><b>Soru:</b> ${konuItem.toplam} | <span style="color:#00c000 !important">D:${konuItem.dogru}</span> | <span style="color:#ff0000 !important">Y:${konuItem.yanlis}</span> | <span style="color:#888 !important">B:${konuItem.bos}</span></div>
                         <div class="undertale-box">
                             <img id="${imgId}" src="${TORIEL_IMG_1}" class="toriel-avatar" alt="Hos">
                             <div id="${dialogId}" class="dialogue-text"></div>
@@ -1479,7 +1486,7 @@
 
                     const konuContainer = document.createElement('div');
                     konuContainer.className = "konu-item";
-                    konuContainer.style.marginBottom = "5px";
+                    konuContainer.style.marginBottom = "4px";
                     konuContainer.appendChild(konuHeaderBtn);
                     konuContainer.appendChild(detayIcerikDiv);
                     icerikDiv.appendChild(konuContainer);
@@ -1576,7 +1583,7 @@
             const ctx = canvas.getContext('2d');
             if (!dataList || dataList.length === 0) return;
 
-            let dynamicWidth = Math.max(400, dataList.length * 60 + 50);
+            let dynamicWidth = Math.max(380, dataList.length * 55 + 40);
             canvas.width = dynamicWidth;
             canvas.style.width = dynamicWidth + "px";
 
@@ -1586,7 +1593,7 @@
                 if (m > maxSoru) maxSoru = m;
             });
 
-            let paddingBottom = 25, paddingTop = 15;
+            let paddingBottom = 22, paddingTop = 12;
             let chartHeight = canvas.height - paddingBottom - paddingTop;
             let chartWidth = canvas.width;
             let startTime = performance.now();
@@ -1604,44 +1611,44 @@
                 ctx.lineWidth = 1;
                 for (let i = 0; i <= 4; i++) {
                     let y = paddingTop + (chartHeight / 4) * i;
-                    ctx.beginPath(); ctx.moveTo(35, y); ctx.lineTo(chartWidth - 10, y); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(30, y); ctx.lineTo(chartWidth - 10, y); ctx.stroke();
                     let valLabel = Math.round(maxSoru - (maxSoru / 4) * i);
-                    ctx.fillStyle = '#888888'; ctx.font = '9px sans-serif'; ctx.fillText(valLabel, 5, y + 3);
+                    ctx.fillStyle = '#888888'; ctx.font = '8px sans-serif'; ctx.fillText(valLabel, 4, y + 3);
                 }
 
-                let groupWidth = (chartWidth - 45) / dataList.length;
-                let barWidth = Math.max(5, Math.min(12, groupWidth / 4)); 
+                let groupWidth = (chartWidth - 40) / dataList.length;
+                let barWidth = Math.max(4, Math.min(10, groupWidth / 4)); 
                 let currentHitboxes = [];
 
                 dataList.forEach((item, index) => {
-                    let groupX = 45 + index * groupWidth + (groupWidth - (barWidth * 3 + 6)) / 2;
+                    let groupX = 40 + index * groupWidth + (groupWidth - (barWidth * 3 + 5)) / 2;
                     let hD = (item.dogru / maxSoru) * chartHeight * easeProgress;
                     let hY = (item.yanlis / maxSoru) * chartHeight * easeProgress;
                     let hB = (item.bos / maxSoru) * chartHeight * easeProgress;
                     let baseY = paddingTop + chartHeight;
 
-                    let xD = groupX, xY = groupX + barWidth + 3, xB = groupX + (barWidth * 2) + 6;
+                    let xD = groupX, xY = groupX + barWidth + 2, xB = groupX + (barWidth * 2) + 4;
 
                     ctx.fillStyle = '#00c000'; ctx.fillRect(xD, baseY - hD, barWidth, hD);
                     ctx.fillStyle = '#ff0000'; ctx.fillRect(xY, baseY - hY, barWidth, hY);
                     ctx.fillStyle = '#777777'; ctx.fillRect(xB, baseY - hB, barWidth, hB);
 
                     if (progress === 1) {
-                        ctx.fillStyle = '#ffffff'; ctx.font = '8px sans-serif'; ctx.textAlign = 'center';
-                        ctx.fillText(item.dogru, xD + barWidth/2, baseY - hD - 3);
-                        ctx.fillText(item.yanlis, xY + barWidth/2, baseY - hY - 3);
-                        ctx.fillText(item.bos, xB + barWidth/2, baseY - hB - 3);
+                        ctx.fillStyle = '#ffffff'; ctx.font = '7px sans-serif'; ctx.textAlign = 'center';
+                        ctx.fillText(item.dogru, xD + barWidth/2, baseY - hD - 2);
+                        ctx.fillText(item.yanlis, xY + barWidth/2, baseY - hY - 2);
+                        ctx.fillText(item.bos, xB + barWidth/2, baseY - hB - 2);
                         ctx.textAlign = 'start';
                     }
 
-                    ctx.fillStyle = '#ffffff'; ctx.font = '9px "WhFont", sans-serif'; ctx.textAlign = 'center';
-                    let numX = groupX + barWidth + 3;
-                    ctx.fillText(item.no, numX, canvas.height - 8);
+                    ctx.fillStyle = '#ffffff'; ctx.font = '8px "WhFont", sans-serif'; ctx.textAlign = 'center';
+                    let numX = groupX + barWidth + 2;
+                    ctx.fillText(item.no, numX, canvas.height - 6);
                     ctx.textAlign = 'start';
 
                     if (progress === 1) {
                         currentHitboxes.push({
-                            x: groupX - 6, y: 0, w: (barWidth * 3 + 6) + 12, h: canvas.height,
+                            x: groupX - 5, y: 0, w: (barWidth * 3 + 5) + 10, h: canvas.height,
                             centerX: numX, topY: paddingTop,
                             text: `Deneme ${item.no} -> D: ${item.dogru} | Y: ${item.yanlis} | B: ${item.bos}`
                         });
@@ -1662,14 +1669,14 @@
             const mouseX = e.clientX - rect.left + barBoxEl.scrollLeft;
             const mouseY = e.clientY - rect.top;
             let hovered = null;
-            barHitboxes.items?.forEach ? null : barHitboxes.forEach(box => {
+            barHitboxes.forEach(box => {
                 if (mouseX >= box.x && mouseX <= box.x + box.w && mouseY >= box.y && mouseY <= box.y + box.h) hovered = box;
             });
             if (hovered) {
                 tooltipEl.style.display = 'block';
                 tooltipEl.innerText = hovered.text;
                 tooltipEl.style.left = hovered.centerX + 'px';
-                tooltipEl.style.top = (hovered.topY - 14) + 'px';
+                tooltipEl.style.top = (hovered.topY - 12) + 'px';
             } else {
                 tooltipEl.style.display = 'none';
             }
@@ -1716,7 +1723,7 @@
                     imgElement.src = TORIEL_IMG_1;
                     if (torielAudio) { torielAudio.pause(); torielAudio.currentTime = 0; }
                 }
-            }, 60);
+            }, 50);
         }
 
         function typeWriterEffect(elementId, imgId, text) {
@@ -1729,10 +1736,10 @@
             textContainer.innerText = "";
             imgElement.src = TORIEL_IMG_1;
 
-            if (torielAudio) {
-                torielAudio.loop = true;
-                torielAudio.currentTime = 0;
-                torielAudio.play().catch(e => {});
+            if (torielVoice) {
+                torielVoice.loop = true;
+                torielVoice.currentTime = 0;
+                torielVoice.play().catch(e => {});
             }
 
             let toggleImg = false;
@@ -1748,9 +1755,9 @@
                     clearInterval(aktifYaziciTimer);
                     aktifYaziciTimer = null;
                     imgElement.src = TORIEL_IMG_1;
-                    if (torielAudio) { torielAudio.pause(); torielAudio.currentTime = 0; }
+                    if (torielVoice) { torielVoice.pause(); torielVoice.currentTime = 0; }
                 }
-            }, 60);
+            }, 50);
         }
 
         function typeWriterSans(text) {
@@ -1772,7 +1779,7 @@
                     aktifYaziciTimer = null;
                     if (sansAudio) { sansAudio.pause(); sansAudio.currentTime = 0.0; }
                 }
-            }, 30);
+            }, 25);
         }
 
         function listeyeDon() {
