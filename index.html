@@ -555,7 +555,7 @@
     <div id="welcomeScreen">
         <div class="welcome-container">
             <div class="undertale-box" style="margin-bottom: 12px; text-align: left;">
-                <img id="welcomeTorielImg" src="hoş.png" class="toriel-avatar" alt="Hos">
+                <img id="welcomeTorielImg" src="https://i.ibb.co/bgVjVpPK/toriel.png" class="toriel-avatar" alt="Toriel">
                 <div id="welcomeDialogue" class="dialogue-text"></div>
             </div>
             <button id="startAppBtn" class="start-text-btn" onclick="baslatUygulama()">* BAŞLA</button>
@@ -580,7 +580,7 @@
             </div>
         </div>
 
-        <!-- bb.gif arka planındayken rapor alanı (sadece hoş.png sabit) -->
+        <!-- bb.gif arka planındayken rapor alanı (sadece hoş.png sabit, ses yok) -->
         <div id="bbContentArea">
             <div class="card">
                 <h3>📜 DENEME RAPORU</h3>
@@ -780,7 +780,7 @@
         });
 
         window.onload = function() {
-            const welcomeText = "* Merhaba evladım...\n* Deneme takip sistemine hoş geldin.\n* Başlamak için aşağıdaki düğmeye basabilirsin.";
+            const welcomeText = "* Merhaba evladım...\n* Çalışmam gerekiyor!\n* Başlamak için aşağıdaki düğmeye basabilirsin.";
             typeWriterWelcome("welcomeDialogue", "welcomeTorielImg", welcomeText);
             
             const bugun = new Date().toISOString().split('T')[0];
@@ -997,22 +997,15 @@
             typeWriterReport("bbDialogue", "bbHosImg", raporMetni);
         }
 
-        // Rapor ekranında sadece hoş.png sabit kalır, asla değişmez
+        // Rapor ekranında sadece hoş.png sabit kalır, toriel.mp3 ÇALMAZ
         function typeWriterReport(elementId, imgId, text) {
             durdurYazici();
             let i = 0;
             const textContainer = document.getElementById(elementId);
             const imgElement = document.getElementById(imgId);
-            const torielVoice = document.getElementById('torielVoice');
             if (!textContainer || !imgElement || !text) return;
             textContainer.innerText = "";
             imgElement.src = "hoş.png";
-
-            if (torielVoice) {
-                torielVoice.loop = true;
-                torielVoice.currentTime = 0;
-                torielVoice.play().catch(e => {});
-            }
 
             aktifYaziciTimer = setInterval(() => {
                 if (i < text.length) {
@@ -1022,7 +1015,6 @@
                     clearInterval(aktifYaziciTimer);
                     aktifYaziciTimer = null;
                     imgElement.src = "hoş.png";
-                    if (torielVoice) { torielVoice.pause(); torielVoice.currentTime = 0; }
                 }
             }, 35);
         }
@@ -1253,7 +1245,7 @@
             }
 
             if ((dogru + yanlis + bos) !== toplamSoru) {
-                gosterFormUyarisi(`* Doğru (${dogru}), yanlış (${yanlis}) ve boş (${bos}) toplamı, konunun toplam soru sayısına (${toplamSoru}) eşit olmalıdır!`);
+                gosterFormUyarisi(`* Doğru (${dogru}), yanlış (${yanlis}) and boş (${bos}) toplamı, konunun toplam soru sayısına (${toplamSoru}) eşit olmalıdır!`);
                 return;
             }
 
@@ -1478,7 +1470,7 @@
                         <div style="font-size:9px !important; text-align:center; color:#ffff00 !important; margin-top:3px; font-family:'WhFont', cursive !important;">Başarı: %${konuItem.oran} | Net: ${konuNet}</div>
                         <div style="font-size:8px !important; text-align:center; color:#ccc !important; margin-top:2px; font-family:'WhFont', cursive !important;"><b>Soru:</b> ${konuItem.toplam} | <span style="color:#00c000 !important">D:${konuItem.dogru}</span> | <span style="color:#ff0000 !important">Y:${konuItem.yanlis}</span> | <span style="color:#888 !important">B:${konuItem.bos}</span></div>
                         <div class="undertale-box">
-                            <img id="${imgId}" src="${TORIEL_IMG_1}" class="toriel-avatar" alt="Hos">
+                            <img id="${imgId}" src="${TORIEL_IMG_1}" class="toriel-avatar" alt="Toriel">
                             <div id="${dialogId}" class="dialogue-text"></div>
                         </div>
                     `;
@@ -1699,7 +1691,7 @@
             const torielAudio = document.getElementById('torielVoice');
             if (!textContainer || !imgElement || !text) return;
             textContainer.innerText = "";
-            imgElement.src = "hoş.png";
+            imgElement.src = TORIEL_IMG_1;
 
             if (torielAudio) {
                 torielAudio.loop = true;
@@ -1707,14 +1699,19 @@
                 torielAudio.play().catch(e => {});
             }
 
+            let toggleImg = false;
             aktifYaziciTimer = setInterval(() => {
                 if (i < text.length) {
                     textContainer.innerText += text.charAt(i);
+                    if (text.charAt(i).trim() !== "") {
+                        toggleImg = !toggleImg;
+                        imgElement.src = toggleImg ? TORIEL_IMG_2 : TORIEL_IMG_1;
+                    }
                     i++;
                 } else {
                     clearInterval(aktifYaziciTimer);
                     aktifYaziciTimer = null;
-                    imgElement.src = "hoş.png";
+                    imgElement.src = TORIEL_IMG_1;
                     if (torielAudio) { torielAudio.pause(); torielAudio.currentTime = 0; }
                 }
             }, 45);
