@@ -1,9 +1,8 @@
-const CACHE_NAME = 'undertale-deneme-v1';
+const CACHE_NAME = 'undertale-deneme-v2';
 
-// Kodunun çalışması için gereken tüm yerel ve dış kaynaklı dosyalar
 const ASSETS_TO_CACHE = [
     './',
-    './index.html', // Eğer ana sayfanın adı index.html ise burayı './index.html' yapabilirsin
+    './index.html',
     './manifest.json',
     './nn.png',
     './neden.gif',
@@ -19,13 +18,12 @@ const ASSETS_TO_CACHE = [
     './shop3.mp3',
     './fonts/wh.ttf',
     './fonts/notethis.ttf',
-    // İstediğin Toriel, Toriel2 ve Kalp Chart (ah.png) linkleri:
     'https://i.ibb.co/bgVjVpPK/toriel.png',
     'https://i.ibb.co/nN37fGZq/toriel2.png',
     'https://i.ibb.co/4Z09dCDt/ah.png'
 ];
 
-// Service Worker Kurulumu ve Dosyaların Önbelleğe Alınması
+// Service Worker Kurulumu
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
@@ -36,7 +34,7 @@ self.addEventListener('install', (event) => {
     self.skipWaiting();
 });
 
-// Eski Önbelleklerin Temizlenmesi
+// Eski Önbelleklerin Temizlenmesi (Versiyon güncellendiğinde eskiler silinir)
 self.addEventListener('activate', (event) => {
     event.waitUntil(
         caches.keys().then((keyList) => {
@@ -53,15 +51,31 @@ self.addEventListener('activate', (event) => {
     self.clients.claim();
 });
 
-// İnternet Olmadığında Önbellekten Sunma Stratejisi (Cache-First)
+// Geliştirilmiş Fetch Stratejisi (Özellikle ses ve video dosyaları için)
 self.addEventListener('fetch', (event) => {
+    // Tarayıcı dış kaynaklı istekleri (örneğin ibb.co resimleri) ve kendi dosyalarımızı yakala
     event.respondWith(
         caches.match(event.request).then((cachedResponse) => {
             if (cachedResponse) {
-                return cachedResponse; // Önbellekte varsa internete bakmadan direkt getir
+                // Önbellekte varsa direkt döndür
+                return cachedResponse;
             }
-            return fetch(event.request).catch(() => {
-                // Eğer internet yoksa ve dış kaynaklı bir resim/sayfa yüklenemezse yedek durum yönetimi yapılabilir
+
+            // Önbellekte yoksa internetten çek ve önbelleğe klonlayıp kaydet
+            return fetch(event.request).then((response) => {
+                // Geçerli bir yanıt alıp almadığımızı kontrol et
+                if (!response || response.status !== 200 || response.type !== 'basic' && !event.request.url.startsWith('http')) {
+                    return response;
+                }
+
+                let responseToCache = response.clone();
+                caches.open(CACHE_NAME).then((cache) => {
+                    cache.put(event.request, responseToCache);
+                });
+
+                return response;
+            }).catch(() => {
+                // Çevrimdışıyken ve dosya önbellekte yoksa yapılabilecek alternatif fallback işlemleri
             });
         })
     );
