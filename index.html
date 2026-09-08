@@ -871,6 +871,12 @@
             document.body.classList.add('kaka-bg');
             document.getElementById('normalTopBar').style.display = 'none';
             document.getElementById('shopControls').classList.add('show');
+            
+            // Konu analizi ekranına her girildiğinde seçimi ve tabloları sıfırla
+            document.getElementById('konuSecimSelect').value = "";
+            document.getElementById('shopChartContainer').style.display = 'none';
+            document.getElementById('barChartCardContainer').style.display = 'none';
+
             konuSecimleriniDoldur();
 
             const audio = document.getElementById('bgAudio');
@@ -890,6 +896,11 @@
             document.getElementById('normalTopBar').style.display = 'flex';
             document.body.classList.remove('kaka-bg');
             
+            // Geri dönüldüğünde seçimleri temizle
+            document.getElementById('konuSecimSelect').value = "";
+            document.getElementById('shopChartContainer').style.display = 'none';
+            document.getElementById('barChartCardContainer').style.display = 'none';
+
             const audio = document.getElementById('bgAudio');
             audio.src = 'fallendown.mp3';
             audio.play().then(() => {
