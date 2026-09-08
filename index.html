@@ -523,6 +523,7 @@
             box-sizing: border-box;
             padding: 12px;
             transition: opacity 0.8s ease;
+            pointer-events: auto;
         }
         .welcome-container { max-width: 420px; width: 100%; text-align: center; }
 
@@ -760,1150 +761,1155 @@
                     console.log('Service Worker kaydı başarısız:', err);
                 });
         });
+    }
         
-        const TORIEL_IMG_1 = "https://i.ibb.co/bgVjVpPK/toriel.png";
-        const TORIEL_IMG_2 = "https://i.ibb.co/nN37fGZq/toriel2.png";
-        
-        let isMusicPlaying = false;
-        let userPausedMusic = false;
-        let isWewPlaying = false;
-        let aktifDenemeIsmi = "";
-        let aktifYaziciTimer = null;
-        let barHitboxes = [];
-        let secilenNikDenemeIsmi = "";
+    const TORIEL_IMG_1 = "https://i.ibb.co/bgVjVpPK/toriel.png";
+    const TORIEL_IMG_2 = "https://i.ibb.co/nN37fGZq/toriel2.png";
+    
+    let isMusicPlaying = false;
+    let userPausedMusic = false;
+    let isWewPlaying = false;
+    let aktifDenemeIsmi = "";
+    let aktifYaziciTimer = null;
+    let barHitboxes = [];
+    let secilenNikDenemeIsmi = "";
 
-        document.addEventListener("visibilitychange", function() {
-            const bgAudio = document.getElementById('bgAudio');
-            const wewAudio = document.getElementById('wewAudio');
-            const torielVoice = document.getElementById('torielVoice');
-            const sansVoice = document.getElementById('sansVoice');
+    document.addEventListener("visibilitychange", function() {
+        const bgAudio = document.getElementById('bgAudio');
+        const wewAudio = document.getElementById('wewAudio');
+        const torielVoice = document.getElementById('torielVoice');
+        const sansVoice = document.getElementById('sansVoice');
 
-            if (document.hidden) {
-                if (!bgAudio.paused) bgAudio.pause();
-                if (!wewAudio.paused) wewAudio.pause();
-                if (!torielVoice.paused) torielVoice.pause();
-                if (!sansVoice.paused) sansVoice.pause();
-            } else {
-                if (!userPausedMusic) {
-                    if (isMusicPlaying && bgAudio.paused) bgAudio.play().catch(e => {});
-                    if (isWewPlaying && wewAudio.paused) wewAudio.play().catch(e => {});
-                }
+        if (document.hidden) {
+            if (!bgAudio.paused) bgAudio.pause();
+            if (!wewAudio.paused) wewAudio.pause();
+            if (!torielVoice.paused) torielVoice.pause();
+            if (!sansVoice.paused) sansVoice.pause();
+        } else {
+            if (!userPausedMusic) {
+                if (isMusicPlaying && bgAudio.paused) bgAudio.play().catch(e => {});
+                if (isWewPlaying && wewAudio.paused) wewAudio.play().catch(e => {});
             }
-        });
+        }
+    });
 
-        window.onload = function() {
+    window.onload = function() {
+        // Sayfa yüklenince Toriel'in konuşması garanti altına alındı
+        setTimeout(() => {
             const welcomeText = "* Merhaba evladım...\n* Deneme sistemine hoşgeldin!\n* Başlamak için aşağıdaki düğmeye basabilirsin.";
             typeWriterWelcome("welcomeDialogue", "welcomeTorielImg", welcomeText);
-            
-            const bugun = new Date().toISOString().split('T')[0];
-            const tarihInput = document.getElementById('denemeTarihi');
-            if(tarihInput) tarihInput.value = bugun;
+        }, 150);
+        
+        const bugun = new Date().toISOString().split('T')[0];
+        const tarihInput = document.getElementById('denemeTarihi');
+        if(tarihInput) tarihInput.value = bugun;
 
-            hedefDersleriYukle();
-        };
+        hedefDersleriYukle();
+    };
 
-        function hedefDersEkle() {
-            let dersAdi = document.getElementById('hedefDersAdi').value.trim();
-            let dersTuru = document.getElementById('hedefDersTuru').value;
-            let netVal = parseFloat(document.getElementById('hedefDersNet').value);
+    function hedefDersEkle() {
+        let dersAdi = document.getElementById('hedefDersAdi').value.trim();
+        let dersTuru = document.getElementById('hedefDersTuru').value;
+        let netVal = parseFloat(document.getElementById('hedefDersNet').value);
 
-            if (!dersAdi || isNaN(netVal)) {
-                alert("Lütfen ders adı ve geçerli bir hedef net girin!");
-                return;
-            }
-
-            let hedefDersler = getStorageData('myHedefDersler', {});
-            hedefDersler[dersAdi] = { turu: dersTuru, net: netVal };
-            setStorageData('myHedefDersler', hedefDersler);
-
-            document.getElementById('hedefDersAdi').value = '';
-            document.getElementById('hedefDersNet').value = '';
-            hedefDersleriYukle();
+        if (!dersAdi || isNaN(netVal)) {
+            alert("Lütfen ders adı ve geçerli bir hedef net girin!");
+            return;
         }
 
-        function hedefDersSil(dersAdi) {
-            let hedefDersler = getStorageData('myHedefDersler', {});
-            delete hedefDersler[dersAdi];
-            setStorageData('myHedefDersler', hedefDersler);
-            hedefDersleriYukle();
+        let hedefDersler = getStorageData('myHedefDersler', {});
+        hedefDersler[dersAdi] = { turu: dersTuru, net: netVal };
+        setStorageData('myHedefDersler', hedefDersler);
+
+        document.getElementById('hedefDersAdi').value = '';
+        document.getElementById('hedefDersNet').value = '';
+        hedefDersleriYukle();
+    }
+
+    function hedefDersSil(dersAdi) {
+        let hedefDersler = getStorageData('myHedefDersler', {});
+        delete hedefDersler[dersAdi];
+        setStorageData('myHedefDersler', hedefDersler);
+        hedefDersleriYukle();
+    }
+
+    function hedefDersleriYukle() {
+        let listeDiv = document.getElementById('hedefDersListesi');
+        if (!listeDiv) return;
+        let hedefDersler = getStorageData('myHedefDersler', {});
+        listeDiv.innerHTML = "";
+
+        let keys = Object.keys(hedefDersler);
+        if (keys.length === 0) {
+            listeDiv.innerHTML = "<span style='color:#777;'>Henüz ders hedefi eklenmemiş.</span>";
+            return;
         }
 
-        function hedefDersleriYukle() {
-            let listeDiv = document.getElementById('hedefDersListesi');
-            if (!listeDiv) return;
-            let hedefDersler = getStorageData('myHedefDersler', {});
-            listeDiv.innerHTML = "";
+        keys.forEach(ders => {
+            let item = hedefDersler[ders];
+            let row = document.createElement('div');
+            row.style.display = "flex";
+            row.style.justifyContent = "space-between";
+            row.style.alignItems = "center";
+            row.style.marginBottom = "3px";
+            row.innerHTML = `<span>[${item.turu}] ${ders}: <b style="color:#ffff00">${item.net} Net</b></span> <button onclick="hedefDersSil('${ders}')" style="background:black; color:#ff5555; border:1px solid #ff5555; cursor:pointer; font-size:7px; padding:2px 3px;">X</button>`;
+            listeDiv.appendChild(row);
+        });
+    }
 
-            let keys = Object.keys(hedefDersler);
-            if (keys.length === 0) {
-                listeDiv.innerHTML = "<span style='color:#777;'>Henüz ders hedefi eklenmemiş.</span>";
-                return;
-            }
-
-            keys.forEach(ders => {
-                let item = hedefDersler[ders];
-                let row = document.createElement('div');
-                row.style.display = "flex";
-                row.style.justifyContent = "space-between";
-                row.style.alignItems = "center";
-                row.style.marginBottom = "3px";
-                row.innerHTML = `<span>[${item.turu}] ${ders}: <b style="color:#ffff00">${item.net} Net</b></span> <button onclick="hedefDersSil('${ders}')" style="background:black; color:#ff5555; border:1px solid #ff5555; cursor:pointer; font-size:7px; padding:2px 3px;">X</button>`;
-                listeDiv.appendChild(row);
-            });
-        }
-
-        function baslatUygulama() {
-            durdurYazici();
-            const welcomeScreen = document.getElementById('welcomeScreen');
-            const mainContent = document.getElementById('mainAppContent');
-            
-            welcomeScreen.style.opacity = "0";
-            setTimeout(() => {
-                welcomeScreen.style.display = "none";
-                mainContent.style.display = "block";
-                setTimeout(() => { mainContent.style.opacity = "1"; }, 50);
-            }, 800);
-            
-            const audio = document.getElementById('bgAudio');
-            audio.volume = 0.3;
-            audio.play().then(() => {
-                isMusicPlaying = true;
-                userPausedMusic = false;
-            }).catch(err => {
-                isMusicPlaying = false;
-                userPausedMusic = true;
-                document.getElementById('bgMusicBtn').innerText = "▶ BAŞLAT";
-            });
-
-            denemeleriYukle();
-        }
-
-        function goToKakaBg() {
-            durdurYazici();
-            document.body.classList.add('kaka-bg');
-            document.getElementById('normalTopBar').style.display = 'none';
-            document.getElementById('shopControls').classList.add('show');
-            
-            // Konu analizi ekranına her girildiğinde seçimi ve tabloları sıfırla
-            document.getElementById('konuSecimSelect').value = "";
-            document.getElementById('shopChartContainer').style.display = 'none';
-            document.getElementById('barChartCardContainer').style.display = 'none';
-
-            konuSecimleriniDoldur();
-
-            const audio = document.getElementById('bgAudio');
-            audio.src = 'shop3.mp3';
-            audio.play().then(() => {
-                isMusicPlaying = true;
-                userPausedMusic = false;
-                document.getElementById('shopMusicTitle').innerText = "🎵 Shop";
-            }).catch(err => {});
-
-            typeWriterSans("* Greetings... Choose a topic above to unveil the secrets of your trials.");
-        }
-
-        function goBackFromKakaBg() {
-            durdurYazici();
-            document.getElementById('shopControls').classList.remove('show');
-            document.getElementById('normalTopBar').style.display = 'flex';
-            document.body.classList.remove('kaka-bg');
-            
-            // Geri dönüldüğünde seçimleri temizle
-            document.getElementById('konuSecimSelect').value = "";
-            document.getElementById('shopChartContainer').style.display = 'none';
-            document.getElementById('barChartCardContainer').style.display = 'none';
-
-            const audio = document.getElementById('bgAudio');
-            audio.src = 'fallendown.mp3';
-            audio.play().then(() => {
-                isMusicPlaying = true;
-                userPausedMusic = false;
-                document.getElementById('musicTitle').innerText = "🎵 Fallen Down";
-            }).catch(err => {});
-        }
-
-        function triggerNikVideo(denemeIsmi) {
-            secilenNikDenemeIsmi = denemeIsmi;
-            const audio = document.getElementById('bgAudio');
-            audio.pause();
+    function baslatUygulama() {
+        durdurYazici();
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const mainContent = document.getElementById('mainAppContent');
+        
+        welcomeScreen.style.opacity = "0";
+        welcomeScreen.style.pointerEvents = "none";
+        
+        setTimeout(() => {
+            welcomeScreen.style.display = "none";
+            mainContent.style.display = "block";
+            setTimeout(() => { mainContent.style.opacity = "1"; }, 50);
+        }, 400);
+        
+        const audio = document.getElementById('bgAudio');
+        audio.volume = 0.3;
+        audio.play().then(() => {
+            isMusicPlaying = true;
+            userPausedMusic = false;
+        }).catch(err => {
             isMusicPlaying = false;
-
-            const overlay = document.getElementById('videoOverlay');
-            const video = document.getElementById('nikVideo');
-            
-            overlay.style.display = 'flex';
-            video.currentTime = 0;
-            video.play().catch(err => {});
-
-            video.onended = function() {
-                overlay.style.display = 'none';
-                document.body.className = "bb-bg";
-
-                const wewAudio = document.getElementById('wewAudio');
-                wewAudio.volume = 0.3;
-                wewAudio.play().then(() => {
-                    isWewPlaying = true;
-                    document.getElementById('wewMusicBtn').innerText = "⏸ DURDUR";
-                }).catch(err => {
-                    isWewPlaying = false;
-                    document.getElementById('wewMusicBtn').innerText = "▶ BAŞLAT";
-                });
-
-                torielDenemeRaporuVer(secilenNikDenemeIsmi);
-            };
-        }
-
-        function torielDenemeRaporuVer(denemeIsmi) {
-            let tumDenemeler = getStorageData('myDenemeler', {});
-            let denemeUstBilgiler = getStorageData('myDenemeUstBilgiler', {});
-            let hedefDersler = getStorageData('myHedefDersler', {});
-            let kayitlar = tumDenemeler[denemeIsmi] || [];
-            let bilgi = denemeUstBilgiler[denemeIsmi] || {};
-
-            let turu = bilgi.turu || "TYT";
-            let tarihi = bilgi.tarih || "-";
-
-            let toplamDogru = 0, toplamYanlis = 0;
-            let derslerMap = {};
-            let calisilmasiGerekenKonular = [];
-
-            kayitlar.forEach(k => {
-                toplamDogru += k.dogru;
-                toplamYanlis += k.yanlis;
-                if (!derslerMap[k.ders]) {
-                    derslerMap[k.ders] = { dogru: 0, yanlis: 0 };
-                }
-                derslerMap[k.ders].dogru += k.dogru;
-                derslerMap[k.ders].yanlis += k.yanlis;
-
-                let konuBasari = k.toplam > 0 ? (k.dogru / k.toplam) * 100 : 0;
-                if (konuBasari < 70) {
-                    calisilmasiGerekenKonular.push(`${k.ders} - ${k.konu} (%${konuBasari.toFixed(0)} başarı)`);
-                }
-            });
-
-            let toplamNet = parseFloat(Math.max(0, toplamDogru - (toplamYanlis / 4)).toFixed(2));
-
-            let raporMetni = `Deneme Adı: ${denemeIsmi}\n`;
-            raporMetni += `Tür: ${turu} | Tarih: ${tarihi}\n`;
-            raporMetni += `----------------------------------------\n`;
-            raporMetni += `Toplam Net: ${toplamNet}\n\n[Ders Hedef Karşılaştırmaları]:\n`;
-
-            for (const [dersAdi, dVerisi] of Object.entries(derslerMap)) {
-                let dersNet = parseFloat(Math.max(0, dVerisi.dogru - (dVerisi.yanlis / 4)).toFixed(2));
-                raporMetni += `• ${dersAdi}: ${dersNet} Net`;
-
-                let dersHedefObj = hedefDersler[dersAdi];
-                if (dersHedefObj) {
-                    let hNet = parseFloat(dersHedefObj.net);
-                    let fark = (dersNet - hNet).toFixed(2);
-                    if (dersNet >= hNet) {
-                        raporMetni += ` -> HEDEF GEÇİLDİ! (Hedef: ${hNet} ✅ +${Math.abs(fark)})\n`;
-                    } else {
-                        raporMetni += ` -> HEDEFİN ALTINDA (Hedef: ${hNet} ❌ ${fark})\n`;
-                    }
-                } else {
-                    raporMetni += ` (Hedef Belirtilmemiş)\n`;
-                }
-            }
-
-            raporMetni += `----------------------------------------\n`;
-            if (calisilmasiGerekenKonular.length > 0) {
-                raporMetni += `📚 Çalışman Gereken Konular:\n`;
-                calisilmasiGerekenKonular.forEach(konuStr => {
-                    raporMetni += `- ${konuStr}\n`;
-                });
-            } else {
-                raporMetni += `✨ Harika! Bu denemede kritik eksik konun görünmüyor.\n`;
-            }
-
-            typeWriterReport("bbDialogue", "bbHosImg", raporMetni);
-        }
-
-        function typeWriterReport(elementId, imgId, text) {
-            durdurYazici();
-            let i = 0;
-            const textContainer = document.getElementById(elementId);
-            const imgElement = document.getElementById(imgId);
-            if (!textContainer || !imgElement || !text) return;
-            textContainer.innerText = "";
-            imgElement.src = "hoş.png";
-
-            aktifYaziciTimer = setInterval(() => {
-                if (i < text.length) {
-                    textContainer.innerText += text.charAt(i);
-                    i++;
-                } else {
-                    clearInterval(aktifYaziciTimer);
-                    aktifYaziciTimer = null;
-                    imgElement.src = "hoş.png";
-                }
-            }, 35);
-        }
-
-        function goBackFromBbBg() {
-            durdurYazici();
-            const wewAudio = document.getElementById('wewAudio');
-            wewAudio.pause();
-            wewAudio.currentTime = 0;
-            isWewPlaying = false;
-
-            document.body.className = "";
-            const audio = document.getElementById('bgAudio');
-            audio.src = 'fallendown.mp3';
-            audio.play().then(() => {
-                isMusicPlaying = true;
-                userPausedMusic = false;
-                document.getElementById('musicTitle').innerText = "🎵 Fallen Down";
-            }).catch(err => {});
-            denemeleriYukle();
-        }
-
-        function toggleWewMusic() {
-            const wewAudio = document.getElementById('wewAudio');
-            const btn = document.getElementById('wewMusicBtn');
-            if (isWewPlaying) {
-                wewAudio.pause();
-                isWewPlaying = false;
-                userPausedMusic = true;
-                btn.innerText = "▶ BAŞLAT";
-            } else {
-                wewAudio.play().then(() => {
-                    isWewPlaying = true;
-                    userPausedMusic = false;
-                    btn.innerText = "⏸ DURDUR";
-                }).catch(err => {});
-            }
-        }
-
-        function changeWewVolume(val) {
-            document.getElementById('wewAudio').volume = val;
-        }
-
-        function getStorageData(key, fallback) {
-            try {
-                const item = localStorage.getItem(key);
-                return item ? JSON.parse(item) : fallback;
-            } catch (e) {
-                return fallback;
-            }
-        }
-
-        function setStorageData(key, data) {
-            try {
-                localStorage.setItem(key, JSON.stringify(data));
-            } catch (e) {}
-        }
-
-        function konuSecimleriniDoldur() {
-            let tumDenemeler = getStorageData('myDenemeler', {});
-            let select = document.getElementById('konuSecimSelect');
-            select.innerHTML = '<option value="">* Bir konu seçin...</option>';
-            let konularSet = new Set();
-            for (let deneme in tumDenemeler) {
-                if (Array.isArray(tumDenemeler[deneme])) {
-                    tumDenemeler[deneme].forEach(item => { if (item.konu) konularSet.add(item.konu); });
-                }
-            }
-            konularSet.forEach(konu => {
-                let opt = document.createElement('option');
-                opt.value = konu;
-                opt.innerText = konu;
-                select.appendChild(opt);
-            });
-        }
-
-        function konuAnalizGoster(secilenKonu) {
-            let chartContainer = document.getElementById('shopChartContainer');
-            let barContainer = document.getElementById('barChartCardContainer');
-
-            if (!secilenKonu) {
-                chartContainer.style.display = 'none';
-                barContainer.style.display = 'none';
-                typeWriterSans("* Greetings... Choose a topic above to unveil the secrets of your trials.");
-                return;
-            }
-
-            let tumDenemeler = getStorageData('myDenemeler', {});
-            let denemeIsimleri = Object.keys(tumDenemeler);
-            let toplamD = 0, toplamY = 0, toplamB = 0, toplamSoru = 0;
-            let denemeBazliVeriler = [];
-
-            denemeIsimleri.forEach((deneme, idx) => {
-                let dTop = 0, yTop = 0, bTop = 0;
-                let bulunan = false;
-                if (Array.isArray(tumDenemeler[deneme])) {
-                    tumDenemeler[deneme].forEach(item => {
-                        if (item.konu === secilenKonu) {
-                            dTop += item.dogru; yTop += item.yanlis; bTop += item.bos;
-                            toplamD += item.dogru; toplamY += item.yanlis; toplamB += item.bos;
-                            toplamSoru += item.toplam;
-                            bulunan = true;
-                        }
-                    });
-                }
-                if (bulunan) {
-                    denemeBazliVeriler.push({ no: idx + 1, dogru: dTop, yanlis: yTop, bos: bTop });
-                }
-            });
-
-            let basari = toplamSoru > 0 ? ((toplamD / toplamSoru) * 100).toFixed(0) : 0;
-            chartContainer.style.display = 'flex';
-            barContainer.style.display = 'block';
-
-            drawPieChartWithHeartMask('shopCanvas', toplamD, toplamY, toplamB);
-            drawAnimatedGroupedBarChart('barCanvas', denemeBazliVeriler);
-            typeWriterSans(`* Ah, gölgeler "${secilenKonu}" hakkında fısıldıyor...\n* Toplam Soru: ${toplamSoru}\n* Doğru: ${toplamD} | Yanlış: ${toplamY} | Boş: ${toplamB}\n* Başarı Oranı: %${basari}`);
-        }
-
-        function toggleBgMusic() {
-            const audio = document.getElementById('bgAudio');
+            userPausedMusic = true;
             const btn = document.getElementById('bgMusicBtn');
-            const shopBtn = document.getElementById('shopBgMusicBtn');
-            if (isMusicPlaying) {
-                audio.pause();
-                isMusicPlaying = false;
-                userPausedMusic = true;
-                if (btn) btn.innerText = "▶ BAŞLAT";
-                if (shopBtn) shopBtn.innerText = "▶ BAŞLAT";
-            } else {
-                audio.play().then(() => {
-                    isMusicPlaying = true;
-                    userPausedMusic = false;
-                    if (btn) btn.innerText = "⏸ DURDUR";
-                    if (shopBtn) shopBtn.innerText = "⏸ DURDUR";
-                }).catch(err => {});
-            }
-        }
+            if(btn) btn.innerText = "▶ BAŞLAT";
+        });
 
-        function changeVolume(val) {
-            document.getElementById('bgAudio').volume = val;
-        }
+        denemeleriYukle();
+    }
 
-        function makeDualSwipeable(element, onDeleteCallback, onLeftSwipeCallback, onClickCallback) {
-            let startX = 0;
-            let currentTranslate = 0;
-            let isDragging = false;
+    function goToKakaBg() {
+        durdurYazici();
+        document.body.classList.add('kaka-bg');
+        document.getElementById('normalTopBar').style.display = 'none';
+        document.getElementById('shopControls').classList.add('show');
+        
+        document.getElementById('konuSecimSelect').value = "";
+        document.getElementById('shopChartContainer').style.display = 'none';
+        document.getElementById('barChartCardContainer').style.display = 'none';
 
-            const touchStart = (e) => {
-                startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-                isDragging = false;
-                document.addEventListener('mousemove', touchMove);
-                document.addEventListener('mouseup', touchEnd);
-                document.addEventListener('touchmove', touchMove, { passive: true });
-                document.addEventListener('touchend', touchEnd);
-            };
+        konuSecimleriniDoldur();
 
-            const touchMove = (e) => {
-                const currentX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
-                const diff = currentX - startX;
-                if (Math.abs(diff) > 5) {
-                    isDragging = true;
-                }
-                if (Math.abs(diff) < 160) {
-                    currentTranslate = diff;
-                    element.style.transform = `translateX(${currentTranslate}px)`;
-                }
-            };
+        const audio = document.getElementById('bgAudio');
+        audio.src = 'shop3.mp3';
+        audio.play().then(() => {
+            isMusicPlaying = true;
+            userPausedMusic = false;
+            document.getElementById('shopMusicTitle').innerText = "🎵 Shop";
+        }).catch(err => {});
 
-            const touchEnd = () => {
-                document.removeEventListener('mousemove', touchMove);
-                document.removeEventListener('mouseup', touchEnd);
-                document.removeEventListener('touchmove', touchMove);
-                document.removeEventListener('touchend', touchEnd);
+        typeWriterSans("* Greetings... Choose a topic above to unveil the secrets of your trials.");
+    }
 
-                if (currentTranslate > 50) {
-                    onDeleteCallback();
-                } else if (currentTranslate < -50) {
-                    onLeftSwipeCallback();
-                } else {
-                    currentTranslate = 0;
-                    element.style.transform = `translateX(0px)`;
-                }
-                setTimeout(() => { isDragging = false; }, 50);
-            };
+    function goBackFromKakaBg() {
+        durdurYazici();
+        document.getElementById('shopControls').classList.remove('show');
+        document.getElementById('normalTopBar').style.display = 'flex';
+        document.body.classList.remove('kaka-bg');
+        
+        document.getElementById('konuSecimSelect').value = "";
+        document.getElementById('shopChartContainer').style.display = 'none';
+        document.getElementById('barChartCardContainer').style.display = 'none';
 
-            element.addEventListener('mousedown', touchStart);
-            element.addEventListener('touchstart', touchStart, { passive: true });
+        const audio = document.getElementById('bgAudio');
+        audio.src = 'fallendown.mp3';
+        audio.play().then(() => {
+            isMusicPlaying = true;
+            userPausedMusic = false;
+            document.getElementById('musicTitle').innerText = "🎵 Fallen Down";
+        }).catch(err => {});
+    }
 
-            if (onClickCallback) {
-                element.addEventListener('click', (e) => {
-                    if (!isDragging) onClickCallback(e);
-                });
-            }
-        }
+    function triggerNikVideo(denemeIsmi) {
+        secilenNikDenemeIsmi = denemeIsmi;
+        const audio = document.getElementById('bgAudio');
+        audio.pause();
+        isMusicPlaying = false;
 
-        function gosterFormUyarisi(mesaj) {
-            const kutu = document.getElementById('formUyariKutusu');
-            const metin = document.getElementById('formUyariMetin');
-            metin.innerText = mesaj;
-            kutu.style.display = 'block';
-            kutu.scrollIntoView({ behavior: 'smooth' });
-        }
+        const overlay = document.getElementById('videoOverlay');
+        const video = document.getElementById('nikVideo');
+        
+        overlay.style.display = 'flex';
+        video.currentTime = 0;
+        video.play().catch(err => {});
 
-        function gizleFormUyarisi() {
-            document.getElementById('formUyariKutusu').style.display = 'none';
-        }
+        video.onended = function() {
+            overlay.style.display = 'none';
+            document.body.className = "bb-bg";
 
-        function kaydet() {
-            gizleFormUyarisi();
-
-            const denemeAdi = document.getElementById('denemeAdi').value.trim();
-            const denemeToplamSoru = parseInt(document.getElementById('denemeToplamSoru').value) || 0;
-            const denemeTuru = document.getElementById('denemeTuru').value;
-            const denemeTarihi = document.getElementById('denemeTarihi').value;
-            const dersAdi = document.getElementById('dersAdi').value.trim();
-            const dersSoruSayisi = parseInt(document.getElementById('dersSoruSayisi').value) || 0;
-            const konuAdi = document.getElementById('konuAdi').value.trim();
-            const toplamSoru = parseInt(document.getElementById('toplamSoru').value) || 0;
-            const dogru = parseInt(document.getElementById('dogru').value) || 0;
-            const yanlis = parseInt(document.getElementById('yanlis').value) || 0;
-            const bos = parseInt(document.getElementById('bos').value) || 0;
-
-            if (!denemeAdi || !dersAdi || !konuAdi || !denemeTarihi || toplamSoru <= 0 || dersSoruSayisi <= 0 || denemeToplamSoru <= 0) {
-                gosterFormUyarisi("* Lütfen tüm alanları eksiksiz doldurun, evladım!");
-                return;
-            }
-
-            if ((dogru + yanlis + bos) !== toplamSoru) {
-                gosterFormUyarisi(`* Doğru (${dogru}), yanlış (${yanlis}) and boş (${bos}) toplamı, konunun toplam soru sayısına (${toplamSoru}) eşit olmalıdır!`);
-                return;
-            }
-
-            let tumDenemeler = getStorageData('myDenemeler', {});
-            let denemeUstBilgiler = getStorageData('myDenemeUstBilgiler', {});
-
-            denemeUstBilgiler[denemeAdi] = {
-                toplamSoru: denemeToplamSoru,
-                turu: denemeTuru,
-                tarih: denemeTarihi
-            };
-
-            if (!tumDenemeler[denemeAdi]) tumDenemeler[denemeAdi] = [];
-
-            let tumDerslerSoruToplami = 0;
-            let mevcutDersSoruToplami = 0;
-            let hesaplananDersler = {};
-
-            tumDenemeler[denemeAdi].forEach(item => {
-                if (!hesaplananDersler[item.ders]) hesaplananDersler[item.ders] = item.dersToplamSoru;
-                if (item.ders === dersAdi) mevcutDersSoruToplami += item.toplam;
-            });
-            hesaplananDersler[dersAdi] = dersSoruSayisi;
-
-            for (let d in hesaplananDersler) { tumDerslerSoruToplami += hesaplananDersler[d]; }
-
-            if (tumDerslerSoruToplami > denemeUstBilgiler[denemeAdi].toplamSoru) {
-                gosterFormUyarisi(`* Bu ders ile birlikte denemedeki tüm derslerin toplam soru sayısı (${tumDerslerSoruToplami}), deneme üst sınırını (${denemeUstBilgiler[denemeAdi].toplamSoru}) geçiyor!`);
-                return;
-            }
-
-            if ((mevcutDersSoruToplami + toplamSoru) > dersSoruSayisi) {
-                gosterFormUyarisi(`* Bu ders için girdiğiniz toplam soru sayısı (${dersSoruSayisi}) sınırını aşıyor!`);
-                return;
-            }
-
-            const basariOrani = (dogru / toplamSoru) * 100;
-            const isPass = basariOrani >= 70;
-            
-            const mesaj = isPass 
-                ? "* Harika bir iş çıkardın, evladım!\n* Bu konuya tekrar çalışmana gerek yok." 
-                : "* Görünüşe göre biraz zorlanmışsın...\n* Lütfen bu konuyu bir kez daha gözden geçir, olur mu?";
-
-            tumDenemeler[denemeAdi].push({
-                ders: dersAdi,
-                dersToplamSoru: dersSoruSayisi,
-                konu: konuAdi,
-                toplam: toplamSoru,
-                dogru: dogru,
-                yanlis: yanlis < 0 ? 0 : yanlis,
-                bos: bos < 0 ? 0 : bos,
-                oran: basariOrani.toFixed(0),
-                torielMesaj: mesaj,
-                isPass: isPass
+            const wewAudio = document.getElementById('wewAudio');
+            wewAudio.volume = 0.3;
+            wewAudio.play().then(() => {
+                isWewPlaying = true;
+                document.getElementById('wewMusicBtn').innerText = "⏸ DURDUR";
+            }).catch(err => {
+                isWewPlaying = false;
+                document.getElementById('wewMusicBtn').innerText = "▶ BAŞLAT";
             });
 
-            setStorageData('myDenemeler', tumDenemeler);
-            setStorageData('myDenemeUstBilgiler', denemeUstBilgiler);
+            torielDenemeRaporuVer(secilenNikDenemeIsmi);
+        };
+    }
 
-            document.getElementById('konuAdi').value = '';
-            document.getElementById('toplamSoru').value = '';
-            document.getElementById('dogru').value = '';
-            document.getElementById('yanlis').value = '';
-            document.getElementById('bos').value = '';
+    function torielDenemeRaporuVer(denemeIsmi) {
+        let tumDenemeler = getStorageData('myDenemeler', {});
+        let denemeUstBilgiler = getStorageData('myDenemeUstBilgiler', {});
+        let hedefDersler = getStorageData('myHedefDersler', {});
+        let kayitlar = tumDenemeler[denemeIsmi] || [];
+        let bilgi = denemeUstBilgiler[denemeIsmi] || {};
 
-            denemeleriYukle();
-        }
+        let turu = bilgi.turu || "TYT";
+        let tarihi = bilgi.tarih || "-";
 
-        function denemeleriYukle() {
-            const listeDiv = document.getElementById('denemeListesi');
-            let tumDenemeler = getStorageData('myDenemeler', {});
-            let denemeUstBilgiler = getStorageData('myDenemeUstBilgiler', {});
-            
-            listeDiv.innerHTML = "";
-            const isimler = Object.keys(tumDenemeler);
+        let toplamDogru = 0, toplamYanlis = 0;
+        let derslerMap = {};
+        let calisilmasiGerekenKonular = [];
 
-            if (isimler.length === 0) {
-                listeDiv.innerHTML = "<p style='color:#777; font-size:9px !important; font-family:\"WhFont\", cursive !important; padding: 6px;'>Henüz kayıtlı deneme yok.</p>";
-                return;
+        kayitlar.forEach(k => {
+            toplamDogru += k.dogru;
+            toplamYanlis += k.yanlis;
+            if (!derslerMap[k.ders]) {
+                derslerMap[k.ders] = { dogru: 0, yanlis: 0 };
             }
-
-            isimler.forEach((isim, index) => {
-                const siraNo = index + 1;
-                const kayitlar = tumDenemeler[isim] || [];
-                
-                let bilgi = denemeUstBilgiler[isim];
-                let maxSoru = 0, turu = "TYT", tarihi = "-";
-                if (bilgi) {
-                    if (typeof bilgi === 'object') {
-                        maxSoru = bilgi.toplamSoru || 0;
-                        turu = bilgi.turu || "TYT";
-                        tarihi = bilgi.tarih || "-";
-                    } else {
-                        maxSoru = bilgi;
-                    }
-                }
-                
-                let toplamDogru = 0, toplamYanlis = 0;
-                kayitlar.forEach(k => { 
-                    toplamDogru += k.dogru; 
-                    toplamYanlis += k.yanlis;
-                });
-                
-                const toplamNet = Math.max(0, toplamDogru - (toplamYanlis / 4)).toFixed(2);
-                const denemeBasariOrani = maxSoru > 0 ? ((toplamDogru / maxSoru) * 100).toFixed(0) : 0;
-
-                const wrapper = document.createElement('div');
-                wrapper.className = "swipe-wrapper";
-
-                const deleteBg = document.createElement('div');
-                deleteBg.className = "delete-bg";
-                deleteBg.innerText = "SİL";
-
-                const leftBg = document.createElement('div');
-                leftBg.className = "left-bg";
-                leftBg.innerText = "NİK";
-
-                const btn = document.createElement('div');
-                btn.className = "swipe-btn";
-                
-                btn.innerHTML = `<span>${siraNo}. 📘 ${isim} <span style="font-size:7px !important; color:#aaa !important; font-weight:normal; display:block; margin-top:2px;">[${turu} - ${tarihi}] | Net: <b style="color:#ffff00">${toplamNet}</b></span></span> <span style="font-size:9px !important; color:#ffff00 !important;">%${denemeBasariOrani} ❯</span>`;
-                
-                makeDualSwipeable(btn, () => {
-                    if (confirm(`"${isim}" adlı denemeyi silmek istediğine emin misin?`)) {
-                        delete tumDenemeler[isim];
-                        delete denemeUstBilgiler[isim];
-                        setStorageData('myDenemeler', tumDenemeler);
-                        setStorageData('myDenemeUstBilgiler', denemeUstBilgiler);
-                        denemeleriYukle();
-                    } else {
-                        btn.style.transform = `translateX(0px)`;
-                    }
-                }, () => {
-                    triggerNikVideo(isim);
-                }, () => {
-                    denemeDetayGoster(isim);
-                });
-
-                wrapper.appendChild(deleteBg);
-                wrapper.appendChild(leftBg);
-                wrapper.appendChild(btn);
-                listeDiv.appendChild(wrapper);
-            });
-        }
-
-        function denemeDetayGoster(denemeIsmi) {
-            durdurYazici();
-            aktifDenemeIsmi = denemeIsmi;
-            let tumDenemeler = getStorageData('myDenemeler', {});
-            let denemeUstBilgiler = getStorageData('myDenemeUstBilgiler', {});
-            
-            document.getElementById('listeEkrani').style.display = "none";
-            document.getElementById('detayEkrani').style.display = "block";
-            
-            let bilgi = denemeUstBilgiler[denemeIsmi];
-            let turu = (bilgi && typeof bilgi === 'object') ? bilgi.turu : "TYT";
-            let tarihi = (bilgi && typeof bilgi === 'object') ? bilgi.tarih : "-";
-
-            document.getElementById('detayBaslik').innerHTML = `${denemeIsmi} <span style="font-size:8px; color:#aaa; font-weight:normal;">[${turu} - ${tarihi}]</span>`;
-
-            const anaDiv = document.getElementById('dersGörünümü');
-            anaDiv.innerHTML = "";
-
-            const kayitlar = tumDenemeler[denemeIsmi] || [];
-            const dersler = {};
-            kayitlar.forEach(item => {
-                if (!dersler[item.ders]) dersler[item.ders] = { dersToplamSoru: item.dersToplamSoru, konular: [] };
-                dersler[item.ders].konular.push(item);
-            });
-
-            if (Object.keys(dersler).length === 0) {
-                if (tumDenemeler[denemeIsmi]) delete tumDenemeler[denemeIsmi];
-                if (denemeUstBilgiler[denemeIsmi]) delete denemeUstBilgiler[denemeIsmi];
-                setStorageData('myDenemeler', tumDenemeler);
-                setStorageData('myDenemeUstBilgiler', denemeUstBilgiler);
-                listeyeDon();
-                return;
-            }
-
-            let globalIndex = 0;
-            for (const [dersAdi, dersVerisi] of Object.entries(dersler)) {
-                let dersDogru = 0, dersYanlis = 0, dersToplamGirilen = 0;
-                dersVerisi.konular.forEach(k => { 
-                    dersDogru += k.dogru; 
-                    dersYanlis += k.yanlis;
-                    dersToplamGirilen += k.toplam; 
-                });
-                
-                const dersNet = Math.max(0, dersDogru - (dersYanlis / 4)).toFixed(2);
-                const dersBasari = dersToplamGirilen > 0 ? ((dersDogru / dersToplamGirilen) * 100).toFixed(0) : 0;
-
-                const dersBlock = document.createElement('div');
-                dersBlock.className = "ders-block";
-
-                const dersWrapper = document.createElement('div');
-                dersWrapper.className = "swipe-wrapper";
-
-                const dersDeleteBg = document.createElement('div');
-                dersDeleteBg.className = "delete-bg";
-                dersDeleteBg.innerText = "SİL";
-
-                const dersLeftBg = document.createElement('div');
-                dersLeftBg.className = "left-bg";
-                dersLeftBg.innerText = "SİL";
-
-                const dersHeaderBtn = document.createElement('div');
-                dersHeaderBtn.className = "ders-header-content swipe-btn";
-                dersHeaderBtn.innerHTML = `<span>📚 ${dersAdi} | Net: <b style="color:#ffff00">${dersNet}</b></span> <span style="font-size:9px !important; color:#ffff00 !important;">%${dersBasari} ▼</span>`;
-                
-                makeDualSwipeable(dersHeaderBtn, () => {
-                    dersSil(denemeIsmi, dersAdi);
-                }, () => {
-                    dersSil(denemeIsmi, dersAdi);
-                }, () => {
-                    toggleDers(dersHeaderBtn);
-                });
-
-                dersWrapper.appendChild(dersDeleteBg);
-                dersWrapper.appendChild(dersLeftBg);
-                dersWrapper.appendChild(dersHeaderBtn);
-                dersBlock.appendChild(dersWrapper);
-
-                const icerikDiv = document.createElement('div');
-                icerikDiv.className = "ders-icerik";
-
-                dersVerisi.konular.forEach((konuItem) => {
-                    const idx = globalIndex++;
-                    const cId = `chart-${idx}`;
-                    const dialogId = `dialog-${idx}`;
-                    const imgId = `toriel-img-${idx}`;
-
-                    const konuNet = Math.max(0, konuItem.dogru - (konuItem.yanlis / 4)).toFixed(2);
-
-                    let guvenliMesaj = konuItem.torielMesaj;
-                    if (!guvenliMesaj || guvenliMesaj === "undefined") {
-                        const basariOrani = konuItem.toplam > 0 ? (konuItem.dogru / konuItem.toplam) * 100 : 0;
-                        guvenliMesaj = basariOrani >= 70 
-                            ? "* Harika bir iş çıkardın, evladım!\n* Bu konuya tekrar çalışmana gerek yok." 
-                            : "* Görünüşe göre biraz zorlanmışsın...\n* Lütfen bu konuyu bir kez daha gözden geçir, olur mu?";
-                    }
-
-                    const konuWrapper = document.createElement('div');
-                    konuWrapper.className = "swipe-wrapper";
-                    konuWrapper.style.marginBottom = "4px";
-
-                    const konuDeleteBg = document.createElement('div');
-                    konuDeleteBg.className = "delete-bg";
-                    konuDeleteBg.innerText = "SİL";
-
-                    const konuLeftBg = document.createElement('div');
-                    konuLeftBg.className = "left-bg";
-                    konuLeftBg.innerText = "SİL";
-
-                    const konuHeaderBtn = document.createElement('div');
-                    konuHeaderBtn.className = "konu-header swipe-btn";
-                    konuHeaderBtn.innerHTML = `<span>📌 ${konuItem.konu} (Net: ${konuNet})</span> <span style="font-size:8px !important; color:#aaa !important;" id="konu-btn-txt-${idx}">▶ Göster</span>`;
-                    
-                    makeDualSwipeable(konuHeaderBtn, () => {
-                        konuSil(denemeIsmi, dersAdi, konuItem.konu);
-                    }, () => {
-                        konuSil(denemeIsmi, dersAdi, konuItem.konu);
-                    }, () => {
-                        toggleKonu(idx, cId, dialogId, imgId, encodeURIComponent(guvenliMesaj), konuItem.dogru, konuItem.yanlis, konuItem.bos, konuHeaderBtn);
-                    });
-
-                    konuWrapper.appendChild(konuDeleteBg);
-                    konuWrapper.appendChild(konuLeftBg);
-                    konuWrapper.appendChild(konuHeaderBtn);
-
-                    const detayIcerikDiv = document.createElement('div');
-                    detayIcerikDiv.className = "konu-detay";
-                    detayIcerikDiv.id = `konu-detay-${idx}`;
-                    detayIcerikDiv.innerHTML = `
-                        <div class="chart-box"><canvas id="${cId}" width="120" height="120"></canvas></div>
-                        <div style="font-size:9px !important; text-align:center; color:#ffff00 !important; margin-top:3px; font-family:'WhFont', cursive !important;">Başarı: %${konuItem.oran} | Net: ${konuNet}</div>
-                        <div style="font-size:8px !important; text-align:center; color:#ccc !important; margin-top:2px; font-family:'WhFont', cursive !important;"><b>Soru:</b> ${konuItem.toplam} | <span style="color:#00c000 !important">D:${konuItem.dogru}</span> | <span style="color:#ff0000 !important">Y:${konuItem.yanlis}</span> | <span style="color:#888 !important">B:${konuItem.bos}</span></div>
-                        <div class="undertale-box">
-                            <img id="${imgId}" src="${TORIEL_IMG_1}" class="toriel-avatar" alt="Toriel">
-                            <div id="${dialogId}" class="dialogue-text"></div>
-                        </div>
-                    `;
-
-                    const konuContainer = document.createElement('div');
-                    konuContainer.className = "konu-item";
-                    konuContainer.style.marginBottom = "4px";
-                    konuContainer.appendChild(konuWrapper);
-                    konuContainer.appendChild(detayIcerikDiv);
-                    icerikDiv.appendChild(konuContainer);
-                });
-
-                dersBlock.appendChild(icerikDiv);
-                anaDiv.appendChild(dersBlock);
-            }
-        }
-
-        function konuSil(denemeIsmi, dersAdi, konuAdi) {
-            if (confirm(`"${konuAdi}" konusunu silmek istediğine emin misin?`)) {
-                let tumDenemeler = getStorageData('myDenemeler', {});
-                let denemeUstBilgiler = getStorageData('myDenemeUstBilgiler', {});
-
-                if (tumDenemeler[denemeIsmi]) {
-                    tumDenemeler[denemeIsmi] = tumDenemeler[denemeIsmi].filter(item => !(item.ders === dersAdi && item.konu === konuAdi));
-                    
-                    let kalanKayitlar = tumDenemeler[denemeIsmi];
-                    if (kalanKayitlar.length === 0) {
-                        delete tumDenemeler[denemeIsmi];
-                        delete denemeUstBilgiler[denemeIsmi];
-                        setStorageData('myDenemeler', tumDenemeler);
-                        setStorageData('myDenemeUstBilgiler', denemeUstBilgiler);
-                        listeyeDon();
-                        return;
-                    } else {
-                        setStorageData('myDenemeler', tumDenemeler);
-                    }
-                }
-                denemeDetayGoster(denemeIsmi);
-            } else {
-                denemeDetayGoster(denemeIsmi);
-            }
-        }
-
-        function dersSil(denemeIsmi, dersAdi) {
-            if (confirm(`"${dersAdi}" dersini ve içindeki tüm konuları silmek istediğine emin misin?`)) {
-                let tumDenemeler = getStorageData('myDenemeler', {});
-                let denemeUstBilgiler = getStorageData('myDenemeUstBilgiler', {});
-
-                if (tumDenemeler[denemeIsmi]) {
-                    tumDenemeler[denemeIsmi] = tumDenemeler[denemeIsmi].filter(item => item.ders !== dersAdi);
-                    
-                    if (tumDenemeler[denemeIsmi].length === 0) {
-                        delete tumDenemeler[denemeIsmi];
-                        delete denemeUstBilgiler[denemeIsmi];
-                        setStorageData('myDenemeler', tumDenemeler);
-                        setStorageData('myDenemeUstBilgiler', denemeUstBilgiler);
-                        listeyeDon();
-                        return;
-                    } else {
-                        setStorageData('myDenemeler', tumDenemeler);
-                    }
-                }
-                denemeDetayGoster(denemeIsmi);
-            } else {
-                denemeDetayGoster(denemeIsmi);
-            }
-        }
-
-        function toggleDers(headerEl) {
-            const icerik = headerEl.parentElement.nextElementSibling;
-            const isOpen = icerik.style.display === "block";
-            icerik.style.display = isOpen ? "none" : "block";
-            const spanEl = headerEl.querySelector('span:last-child');
-            spanEl.innerText = spanEl.innerText.replace(isOpen ? '▲' : '▼', isOpen ? '▼' : '▲');
-        }
-
-        function toggleKonu(idx, canvasId, dialogId, imgId, encodedText, d, y, b, headerBtn) {
-            durdurYazici();
-            const detayDiv = document.getElementById(`konu-detay-${idx}`);
-            const isOpen = detayDiv.style.display === "block";
-
-            document.querySelectorAll('.konu-detay').forEach(el => el.style.display = "none");
-            document.querySelectorAll('.konu-header span:last-child').forEach(el => el.innerText = "▶ Göster");
-
-            if (isOpen) {
-                detayDiv.style.display = "none";
-                headerBtn.querySelector('span:last-child').innerText = "▶ Göster";
-            } else {
-                detayDiv.style.display = "block";
-                headerBtn.querySelector('span:last-child').innerText = "▼ Gizle";
-                drawPieChartWithHeartMask(canvasId, d, y, b);
-                typeWriterEffect(dialogId, imgId, decodeURIComponent(encodedText));
-            }
-        }
-
-        let heartMaskImage = new Image();
-        heartMaskImage.crossOrigin = "anonymous";
-        heartMaskImage.src = "https://i.ibb.co/4Z09dCDt/ah.png";
-
-        function drawPieChartWithHeartMask(canvasId, dogru, yanlis, bos) {
-            const canvas = document.getElementById(canvasId);
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            let total = dogru + yanlis + bos;
-            if (total <= 0) total = 1;
-
-            let angles = [
-                { count: dogru, color: '#00c000' },   
-                { count: yanlis, color: '#ff0000' },  
-                { count: bos, color: '#555555' }      
-            ];
-
-            let cx = canvas.width / 2;
-            let cy = canvas.height / 2;
-            let radius = Math.max(cx, cy) * 1.2;
-
-            let tempCanvas = document.createElement('canvas');
-            tempCanvas.width = canvas.width;
-            tempCanvas.height = canvas.height;
-            let tempCtx = tempCanvas.getContext('2d');
-
-            let currentAngle = -Math.PI / 2;
-            angles.forEach(slice => {
-                if (slice.count <= 0) return;
-                let sliceAngle = (slice.count / total) * (2 * Math.PI);
-                tempCtx.beginPath();
-                tempCtx.moveTo(cx, cy);
-                tempCtx.arc(cx, cy, radius, currentAngle, currentAngle + sliceAngle + 0.05);
-                tempCtx.closePath();
-                tempCtx.fillStyle = slice.color;
-                tempCtx.strokeStyle = slice.color;
-                tempCtx.lineWidth = 2;
-                tempCtx.fill();
-                tempCtx.stroke();
-                currentAngle += sliceAngle;
-            });
-
-            if (heartMaskImage.complete && heartMaskImage.naturalWidth !== 0) {
-                tempCtx.globalCompositeOperation = 'destination-in';
-                tempCtx.drawImage(heartMaskImage, 0, 0, tempCanvas.width, tempCanvas.height);
-            }
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(tempCanvas, 0, 0);
-        }
-
-        function drawAnimatedGroupedBarChart(canvasId, dataList) {
-            const canvas = document.getElementById(canvasId);
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            if (!dataList || dataList.length === 0) return;
-
-            let dynamicWidth = Math.max(380, dataList.length * 50 + 35);
-            canvas.width = dynamicWidth;
-            canvas.style.width = dynamicWidth + "px";
-
-            let maxSoru = 1;
-            dataList.forEach(item => {
-                let m = Math.max(item.dogru, item.yanlis, item.bos);
-                if (m > maxSoru) maxSoru = m;
-            });
-
-            let paddingBottom = 20, paddingTop = 10;
-            let chartHeight = canvas.height - paddingBottom - paddingTop;
-            let chartWidth = canvas.width;
-            let startTime = performance.now();
-            let duration = 600;
-
-            barHitboxes = [];
-
-            function animate(currentTime) {
-                let elapsed = currentTime - startTime;
-                let progress = Math.min(elapsed / duration, 1);
-                let easeProgress = 1 - Math.pow(1 - progress, 3);
-
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.strokeStyle = '#333333';
-                ctx.lineWidth = 1;
-                for (let i = 0; i <= 4; i++) {
-                    let y = paddingTop + (chartHeight / 4) * i;
-                    ctx.beginPath(); ctx.moveTo(25, y); ctx.lineTo(chartWidth - 10, y); ctx.stroke();
-                    let valLabel = Math.round(maxSoru - (maxSoru / 4) * i);
-                    ctx.fillStyle = '#888888'; ctx.font = '7px sans-serif'; ctx.fillText(valLabel, 2, y + 3);
-                }
-
-                let groupWidth = (chartWidth - 35) / dataList.length;
-                let barWidth = Math.max(3, Math.min(9, groupWidth / 4)); 
-                let currentHitboxes = [];
-
-                dataList.forEach((item, index) => {
-                    let groupX = 35 + index * groupWidth + (groupWidth - (barWidth * 3 + 4)) / 2;
-                    let hD = (item.dogru / maxSoru) * chartHeight * easeProgress;
-                    let hY = (item.yanlis / maxSoru) * chartHeight * easeProgress;
-                    let hB = (item.bos / maxSoru) * chartHeight * easeProgress;
-                    let baseY = paddingTop + chartHeight;
-
-                    let xD = groupX, xY = groupX + barWidth + 2, xB = groupX + (barWidth * 2) + 4;
-
-                    ctx.fillStyle = '#00c000'; ctx.fillRect(xD, baseY - hD, barWidth, hD);
-                    ctx.fillStyle = '#ff0000'; ctx.fillRect(xY, baseY - hY, barWidth, hY);
-                    ctx.fillStyle = '#777777'; ctx.fillRect(xB, baseY - hB, barWidth, hB);
-
-                    if (progress === 1) {
-                        ctx.fillStyle = '#ffffff'; ctx.font = '6px sans-serif'; ctx.textAlign = 'center';
-                        ctx.fillText(item.dogru, xD + barWidth/2, baseY - hD - 2);
-                        ctx.fillText(item.yanlis, xY + barWidth/2, baseY - hY - 2);
-                        ctx.fillText(item.bos, xB + barWidth/2, baseY - hB - 2);
-                        ctx.textAlign = 'start';
-                    }
-
-                    ctx.fillStyle = '#ffffff'; ctx.font = '7px "WhFont", sans-serif'; ctx.textAlign = 'center';
-                    let numX = groupX + barWidth + 2;
-                    ctx.fillText(item.no, numX, canvas.height - 5);
-                    ctx.textAlign = 'start';
-
-                    if (progress === 1) {
-                        currentHitboxes.push({
-                            x: groupX - 4, y: 0, w: (barWidth * 3 + 4) + 8, h: canvas.height,
-                            centerX: numX, topY: paddingTop,
-                            text: `Deneme ${item.no} -> D: ${item.dogru} | Y: ${item.yanlis} | B: ${item.bos}`
-                        });
-                    }
-                });
-
-                barHitboxes = currentHitboxes;
-                if (progress < 1) requestAnimationFrame(animate);
-            }
-            requestAnimationFrame(animate);
-        }
-
-        const barBoxEl = document.getElementById('barCanvasBox');
-        const tooltipEl = document.getElementById('chartTooltip');
-
-        barBoxEl.addEventListener('mousemove', (e) => {
-            const rect = barBoxEl.getBoundingClientRect();
-            const mouseX = e.clientX - rect.left + barBoxEl.scrollLeft;
-            const mouseY = e.clientY - rect.top;
-            let hovered = null;
-            barHitboxes.forEach(box => {
-                if (mouseX >= box.x && mouseX <= box.x + box.w && mouseY >= box.y && mouseY <= box.y + box.h) hovered = box;
-            });
-            if (hovered) {
-                tooltipEl.style.display = 'block';
-                tooltipEl.innerText = hovered.text;
-                tooltipEl.style.left = hovered.centerX + 'px';
-                tooltipEl.style.top = (hovered.topY - 10) + 'px';
-            } else {
-                tooltipEl.style.display = 'none';
+            derslerMap[k.ders].dogru += k.dogru;
+            derslerMap[k.ders].yanlis += k.yanlis;
+
+            let konuBasari = k.toplam > 0 ? (k.dogru / k.toplam) * 100 : 0;
+            if (konuBasari < 70) {
+                calisilmasiGerekenKonular.push(`${k.ders} - ${k.konu} (%${konuBasari.toFixed(0)} başarı)`);
             }
         });
 
-        barBoxEl.addEventListener('mouseleave', () => { tooltipEl.style.display = 'none'; });
+        let toplamNet = parseFloat(Math.max(0, toplamDogru - (toplamYanlis / 4)).toFixed(2));
 
-        function durdurYazici() {
-            if (aktifYaziciTimer) { clearInterval(aktifYaziciTimer); aktifYaziciTimer = null; }
-            const sansAudio = document.getElementById('sansVoice');
-            if (sansAudio) { sansAudio.pause(); sansAudio.currentTime = 0; }
-            const torielVoice = document.getElementById('torielVoice');
-            if (torielVoice) { torielVoice.pause(); torielVoice.currentTime = 0; }
+        let raporMetni = `Deneme Adı: ${denemeIsmi}\n`;
+        raporMetni += `Tür: ${turu} | Tarih: ${tarihi}\n`;
+        raporMetni += `----------------------------------------\n`;
+        raporMetni += `Toplam Net: ${toplamNet}\n\n[Ders Hedef Karşılaştırmaları]:\n`;
+
+        for (const [dersAdi, dVerisi] of Object.entries(derslerMap)) {
+            let dersNet = parseFloat(Math.max(0, dVerisi.dogru - (dVerisi.yanlis / 4)).toFixed(2));
+            raporMetni += `• ${dersAdi}: ${dersNet} Net`;
+
+            let dersHedefObj = hedefDersler[dersAdi];
+            if (dersHedefObj) {
+                let hNet = parseFloat(dersHedefObj.net);
+                let fark = (dersNet - hNet).toFixed(2);
+                if (dersNet >= hNet) {
+                    raporMetni += ` -> HEDEF GEÇİLDİ! (Hedef: ${hNet} ✅ +${Math.abs(fark)})\n`;
+                } else {
+                    raporMetni += ` -> HEDEFİN ALTINDA (Hedef: ${hNet} ❌ ${fark})\n`;
+                }
+            } else {
+                raporMetni += ` (Hedef Belirtilmemiş)\n`;
+            }
         }
 
-        function typeWriterWelcome(elementId, imgId, text) {
-            durdurYazici();
-            let i = 0;
-            const textContainer = document.getElementById(elementId);
-            const imgElement = document.getElementById(imgId);
-            const torielAudio = document.getElementById('torielVoice');
-            if (!textContainer || !imgElement || !text) return;
-            textContainer.innerText = "";
-            imgElement.src = TORIEL_IMG_1;
+        raporMetni += `----------------------------------------\n`;
+        if (calisilmasiGerekenKonular.length > 0) {
+            raporMetni += `📚 Çalışman Gereken Konular:\n`;
+            calisilmasiGerekenKonular.forEach(konuStr => {
+                raporMetni += `- ${konuStr}\n`;
+            });
+        } else {
+            raporMetni += `✨ Harika! Bu denemede kritik eksik konun görünmüyor.\n`;
+        }
 
-            if (torielAudio) {
-                torielAudio.loop = true;
-                torielAudio.currentTime = 0;
-                torielAudio.play().catch(e => {});
+        typeWriterReport("bbDialogue", "bbHosImg", raporMetni);
+    }
+
+    function typeWriterReport(elementId, imgId, text) {
+        durdurYazici();
+        let i = 0;
+        const textContainer = document.getElementById(elementId);
+        const imgElement = document.getElementById(imgId);
+        if (!textContainer || !imgElement || !text) return;
+        textContainer.innerText = "";
+        imgElement.src = "hoş.png";
+
+        aktifYaziciTimer = setInterval(() => {
+            if (i < text.length) {
+                textContainer.innerText += text.charAt(i);
+                i++;
+            } else {
+                clearInterval(aktifYaziciTimer);
+                aktifYaziciTimer = null;
+                imgElement.src = "hoş.png";
+            }
+        }, 35);
+    }
+
+    function goBackFromBbBg() {
+        durdurYazici();
+        const wewAudio = document.getElementById('wewAudio');
+        wewAudio.pause();
+        wewAudio.currentTime = 0;
+        isWewPlaying = false;
+
+        document.body.className = "";
+        const audio = document.getElementById('bgAudio');
+        audio.src = 'fallendown.mp3';
+        audio.play().then(() => {
+            isMusicPlaying = true;
+            userPausedMusic = false;
+            document.getElementById('musicTitle').innerText = "🎵 Fallen Down";
+        }).catch(err => {});
+        denemeleriYukle();
+    }
+
+    function toggleWewMusic() {
+        const wewAudio = document.getElementById('wewAudio');
+        const btn = document.getElementById('wewMusicBtn');
+        if (isWewPlaying) {
+            wewAudio.pause();
+            isWewPlaying = false;
+            userPausedMusic = true;
+            btn.innerText = "▶ BAŞLAT";
+        } else {
+            wewAudio.play().then(() => {
+                isWewPlaying = true;
+                userPausedMusic = false;
+                btn.innerText = "⏸ DURDUR";
+            }).catch(err => {});
+        }
+    }
+
+    function changeWewVolume(val) {
+        document.getElementById('wewAudio').volume = val;
+    }
+
+    function getStorageData(key, fallback) {
+        try {
+            const item = localStorage.getItem(key);
+            return item ? JSON.parse(item) : fallback;
+        } catch (e) {
+            return fallback;
+        }
+    }
+
+    function setStorageData(key, data) {
+        try {
+            localStorage.setItem(key, JSON.stringify(data));
+        } catch (e) {}
+    }
+
+    function konuSecimleriniDoldur() {
+        let tumDenemeler = getStorageData('myDenemeler', {});
+        let select = document.getElementById('konuSecimSelect');
+        select.innerHTML = '<option value="">* Bir konu seçin...</option>';
+        let konularSet = new Set();
+        for (let deneme in tumDenemeler) {
+            if (Array.isArray(tumDenemeler[deneme])) {
+                tumDenemeler[deneme].forEach(item => { if (item.konu) konularSet.add(item.konu); });
+            }
+        }
+        konularSet.forEach(konu => {
+            let opt = document.createElement('option');
+            opt.value = konu;
+            opt.innerText = konu;
+            select.appendChild(opt);
+        });
+    }
+
+    function konuAnalizGoster(secilenKonu) {
+        let chartContainer = document.getElementById('shopChartContainer');
+        let barContainer = document.getElementById('barChartCardContainer');
+
+        if (!secilenKonu) {
+            chartContainer.style.display = 'none';
+            barContainer.style.display = 'none';
+            typeWriterSans("* Greetings... Choose a topic above to unveil the secrets of your trials.");
+            return;
+        }
+
+        let tumDenemeler = getStorageData('myDenemeler', {});
+        let denemeIsimleri = Object.keys(tumDenemeler);
+        let toplamD = 0, toplamY = 0, toplamB = 0, toplamSoru = 0;
+        let denemeBazliVeriler = [];
+
+        denemeIsimleri.forEach((deneme, idx) => {
+            let dTop = 0, yTop = 0, bTop = 0;
+            let bulunan = false;
+            if (Array.isArray(tumDenemeler[deneme])) {
+                tumDenemeler[deneme].forEach(item => {
+                    if (item.konu === secilenKonu) {
+                        dTop += item.dogru; yTop += item.yanlis; bTop += item.bos;
+                        toplamD += item.dogru; toplamY += item.yanlis; toplamB += item.bos;
+                        toplamSoru += item.toplam;
+                        bulunan = true;
+                    }
+                });
+            }
+            if (bulunan) {
+                denemeBazliVeriler.push({ no: idx + 1, dogru: dTop, yanlis: yTop, bos: bTop });
+            }
+        });
+
+        let basari = toplamSoru > 0 ? ((toplamD / toplamSoru) * 100).toFixed(0) : 0;
+        chartContainer.style.display = 'flex';
+        barContainer.style.display = 'block';
+
+        drawPieChartWithHeartMask('shopCanvas', toplamD, toplamY, toplamB);
+        drawAnimatedGroupedBarChart('barCanvas', denemeBazliVeriler);
+        typeWriterSans(`* Ah, gölgeler "${secilenKonu}" hakkında fısıldıyor...\n* Toplam Soru: ${toplamSoru}\n* Doğru: ${toplamD} | Yanlış: ${toplamY} | Boş: ${toplamB}\n* Başarı Oranı: %${basari}`);
+    }
+
+    function toggleBgMusic() {
+        const audio = document.getElementById('bgAudio');
+        const btn = document.getElementById('bgMusicBtn');
+        const shopBtn = document.getElementById('shopBgMusicBtn');
+        if (isMusicPlaying) {
+            audio.pause();
+            isMusicPlaying = false;
+            userPausedMusic = true;
+            if (btn) btn.innerText = "▶ BAŞLAT";
+            if (shopBtn) shopBtn.innerText = "▶ BAŞLAT";
+        } else {
+            audio.play().then(() => {
+                isMusicPlaying = true;
+                userPausedMusic = false;
+                if (btn) btn.innerText = "⏸ DURDUR";
+                if (shopBtn) shopBtn.innerText = "⏸ DURDUR";
+            }).catch(err => {});
+        }
+    }
+
+    function changeVolume(val) {
+        document.getElementById('bgAudio').volume = val;
+    }
+
+    function makeDualSwipeable(element, onDeleteCallback, onLeftSwipeCallback, onClickCallback) {
+        let startX = 0;
+        let currentTranslate = 0;
+        let isDragging = false;
+
+        const touchStart = (e) => {
+            startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            isDragging = false;
+            document.addEventListener('mousemove', touchMove);
+            document.addEventListener('mouseup', touchEnd);
+            document.addEventListener('touchmove', touchMove, { passive: true });
+            document.addEventListener('touchend', touchEnd);
+        };
+
+        const touchMove = (e) => {
+            const currentX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            const diff = currentX - startX;
+            if (Math.abs(diff) > 5) {
+                isDragging = true;
+            }
+            if (Math.abs(diff) < 160) {
+                currentTranslate = diff;
+                element.style.transform = `translateX(${currentTranslate}px)`;
+            }
+        };
+
+        const touchEnd = () => {
+            document.removeEventListener('mousemove', touchMove);
+            document.removeEventListener('mouseup', touchEnd);
+            document.removeEventListener('touchmove', touchMove);
+            document.removeEventListener('touchend', touchEnd);
+
+            if (currentTranslate > 50) {
+                onDeleteCallback();
+            } else if (currentTranslate < -50) {
+                onLeftSwipeCallback();
+            } else {
+                currentTranslate = 0;
+                element.style.transform = `translateX(0px)`;
+            }
+            setTimeout(() => { isDragging = false; }, 50);
+        };
+
+        element.addEventListener('mousedown', touchStart);
+        element.addEventListener('touchstart', touchStart, { passive: true });
+
+        if (onClickCallback) {
+            element.addEventListener('click', (e) => {
+                if (!isDragging) onClickCallback(e);
+            });
+        }
+    }
+
+    function gosterFormUyarisi(mesaj) {
+        const kutu = document.getElementById('formUyariKutusu');
+        const metin = document.getElementById('formUyariMetin');
+        metin.innerText = mesaj;
+        kutu.style.display = 'block';
+        kutu.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function gizleFormUyarisi() {
+        document.getElementById('formUyariKutusu').style.display = 'none';
+    }
+
+    function kaydet() {
+        gizleFormUyarisi();
+
+        const denemeAdi = document.getElementById('denemeAdi').value.trim();
+        const denemeToplamSoru = parseInt(document.getElementById('denemeToplamSoru').value) || 0;
+        const denemeTuru = document.getElementById('denemeTuru').value;
+        const denemeTarihi = document.getElementById('denemeTarihi').value;
+        const dersAdi = document.getElementById('dersAdi').value.trim();
+        const dersSoruSayisi = parseInt(document.getElementById('dersSoruSayisi').value) || 0;
+        const konuAdi = document.getElementById('konuAdi').value.trim();
+        const toplamSoru = parseInt(document.getElementById('toplamSoru').value) || 0;
+        const dogru = parseInt(document.getElementById('dogru').value) || 0;
+        const yanlis = parseInt(document.getElementById('yanlis').value) || 0;
+        const bos = parseInt(document.getElementById('bos').value) || 0;
+
+        if (!denemeAdi || !dersAdi || !konuAdi || !denemeTarihi || toplamSoru <= 0 || dersSoruSayisi <= 0 || denemeToplamSoru <= 0) {
+            gosterFormUyarisi("* Lütfen tüm alanları eksiksiz doldurun, evladım!");
+            return;
+        }
+
+        if ((dogru + yanlis + bos) !== toplamSoru) {
+            gosterFormUyarisi(`* Doğru (${dogru}), yanlış (${yanlis}) and boş (${bos}) toplamı, konunun toplam soru sayısına (${toplamSoru}) eşit olmalıdır!`);
+            return;
+        }
+
+        let tumDenemeler = getStorageData('myDenemeler', {});
+        let denemeUstBilgiler = getStorageData('myDenemeUstBilgiler', {});
+
+        denemeUstBilgiler[denemeAdi] = {
+            toplamSoru: denemeToplamSoru,
+            turu: denemeTuru,
+            tarih: denemeTarihi
+        };
+
+        if (!tumDenemeler[denemeAdi]) tumDenemeler[denemeAdi] = [];
+
+        let tumDerslerSoruToplami = 0;
+        let mevcutDersSoruToplami = 0;
+        let hesaplananDersler = {};
+
+        tumDenemeler[denemeAdi].forEach(item => {
+            if (!hesaplananDersler[item.ders]) hesaplananDersler[item.ders] = item.dersToplamSoru;
+            if (item.ders === dersAdi) mevcutDersSoruToplami += item.toplam;
+        });
+        hesaplananDersler[dersAdi] = dersSoruSayisi;
+
+        for (let d in hesaplananDersler) { tumDerslerSoruToplami += hesaplananDersler[d]; }
+
+        if (tumDerslerSoruToplami > denemeUstBilgiler[denemeAdi].toplamSoru) {
+            gosterFormUyarisi(`* Bu ders ile birlikte denemedeki tüm derslerin toplam soru sayısı (${tumDerslerSoruToplami}), deneme üst sınırını (${denemeUstBilgiler[denemeAdi].toplamSoru}) geçiyor!`);
+            return;
+        }
+
+        if ((mevcutDersSoruToplami + toplamSoru) > dersSoruSayisi) {
+            gosterFormUyarisi(`* Bu ders için girdiğiniz toplam soru sayısı (${dersSoruSayisi}) sınırını aşıyor!`);
+            return;
+        }
+
+        const basariOrani = (dogru / toplamSoru) * 100;
+        const isPass = basariOrani >= 70;
+        
+        const mesaj = isPass 
+            ? "* Harika bir iş çıkardın, evladım!\n* Bu konuya tekrar çalışmana gerek yok." 
+            : "* Görünüşe göre biraz zorlanmışsın...\n* Lütfen bu konuyu bir kez daha gözden geçir, olur mu?";
+
+        tumDenemeler[denemeAdi].push({
+            ders: dersAdi,
+            dersToplamSoru: dersSoruSayisi,
+            konu: konuAdi,
+            toplam: toplamSoru,
+            dogru: dogru,
+            yanlis: yanlis < 0 ? 0 : yanlis,
+            bos: bos < 0 ? 0 : bos,
+            oran: basariOrani.toFixed(0),
+            torielMesaj: mesaj,
+            isPass: isPass
+        });
+
+        setStorageData('myDenemeler', tumDenemeler);
+        setStorageData('myDenemeUstBilgiler', denemeUstBilgiler);
+
+        document.getElementById('konuAdi').value = '';
+        document.getElementById('toplamSoru').value = '';
+        document.getElementById('dogru').value = '';
+        document.getElementById('yanlis').value = '';
+        document.getElementById('bos').value = '';
+
+        denemeleriYukle();
+    }
+
+    function denemeleriYukle() {
+        const listeDiv = document.getElementById('denemeListesi');
+        let tumDenemeler = getStorageData('myDenemeler', {});
+        let denemeUstBilgiler = getStorageData('myDenemeUstBilgiler', {});
+        
+        listeDiv.innerHTML = "";
+        const isimler = Object.keys(tumDenemeler);
+
+        if (isimler.length === 0) {
+            listeDiv.innerHTML = "<p style='color:#777; font-size:9px !important; font-family:\"WhFont\", cursive !important; padding: 6px;'>Henüz kayıtlı deneme yok.</p>";
+            return;
+        }
+
+        isimler.forEach((isim, index) => {
+            const siraNo = index + 1;
+            const kayitlar = tumDenemeler[isim] || [];
+            
+            let bilgi = denemeUstBilgiler[isim];
+            let maxSoru = 0, turu = "TYT", tarihi = "-";
+            if (bilgi) {
+                if (typeof bilgi === 'object') {
+                    maxSoru = bilgi.toplamSoru || 0;
+                    turu = bilgi.turu || "TYT";
+                    tarihi = bilgi.tarih || "-";
+                } else {
+                    maxSoru = bilgi;
+                }
+            }
+            
+            let toplamDogru = 0, toplamYanlis = 0;
+            kayitlar.forEach(k => { 
+                toplamDogru += k.dogru; 
+                toplamYanlis += k.yanlis;
+            });
+            
+            const toplamNet = Math.max(0, toplamDogru - (toplamYanlis / 4)).toFixed(2);
+            const denemeBasariOrani = maxSoru > 0 ? ((toplamDogru / maxSoru) * 100).toFixed(0) : 0;
+
+            const wrapper = document.createElement('div');
+            wrapper.className = "swipe-wrapper";
+
+            const deleteBg = document.createElement('div');
+            deleteBg.className = "delete-bg";
+            deleteBg.innerText = "SİL";
+
+            const leftBg = document.createElement('div');
+            leftBg.className = "left-bg";
+            leftBg.innerText = "NİK";
+
+            const btn = document.createElement('div');
+            btn.className = "swipe-btn";
+            
+            btn.innerHTML = `<span>${siraNo}. 📘 ${isim} <span style="font-size:7px !important; color:#aaa !important; font-weight:normal; display:block; margin-top:2px;">[${turu} - ${tarihi}] | Net: <b style="color:#ffff00">${toplamNet}</b></span></span> <span style="font-size:9px !important; color:#ffff00 !important;">%${denemeBasariOrani} ❯</span>`;
+            
+            makeDualSwipeable(btn, () => {
+                if (confirm(`"${isim}" adlı denemeyi silmek istediğine emin misin?`)) {
+                    delete tumDenemeler[isim];
+                    delete denemeUstBilgiler[isim];
+                    setStorageData('myDenemeler', tumDenemeler);
+                    setStorageData('myDenemeUstBilgiler', denemeUstBilgiler);
+                    denemeleriYukle();
+                } else {
+                    btn.style.transform = `translateX(0px)`;
+                }
+            }, () => {
+                triggerNikVideo(isim);
+            }, () => {
+                denemeDetayGoster(isim);
+            });
+
+            wrapper.appendChild(deleteBg);
+            wrapper.appendChild(leftBg);
+            wrapper.appendChild(btn);
+            listeDiv.appendChild(wrapper);
+        });
+    }
+
+    function denemeDetayGoster(denemeIsmi) {
+        durdurYazici();
+        aktifDenemeIsmi = denemeIsmi;
+        let tumDenemeler = getStorageData('myDenemeler', {});
+        let denemeUstBilgiler = getStorageData('myDenemeUstBilgiler', {});
+        
+        document.getElementById('listeEkrani').style.display = "none";
+        document.getElementById('detayEkrani').style.display = "block";
+        
+        let bilgi = denemeUstBilgiler[denemeIsmi];
+        let turu = (bilgi && typeof bilgi === 'object') ? bilgi.turu : "TYT";
+        let tarihi = (bilgi && typeof bilgi === 'object') ? bilgi.tarih : "-";
+
+        document.getElementById('detayBaslik').innerHTML = `${denemeIsmi} <span style="font-size:8px; color:#aaa; font-weight:normal;">[${turu} - ${tarihi}]</span>`;
+
+        const anaDiv = document.getElementById('dersGörünümü');
+        anaDiv.innerHTML = "";
+
+        const kayitlar = tumDenemeler[denemeIsmi] || [];
+        const dersler = {};
+        kayitlar.forEach(item => {
+            if (!dersler[item.ders]) dersler[item.ders] = { dersToplamSoru: item.dersToplamSoru, konular: [] };
+            dersler[item.ders].konular.push(item);
+        });
+
+        if (Object.keys(dersler).length === 0) {
+            if (tumDenemeler[denemeIsmi]) delete tumDenemeler[denemeIsmi];
+            if (denemeUstBilgiler[denemeIsmi]) delete denemeUstBilgiler[denemeIsmi];
+            setStorageData('myDenemeler', tumDenemeler);
+            setStorageData('myDenemeUstBilgiler', denemeUstBilgiler);
+            listeyeDon();
+            return;
+        }
+
+        let globalIndex = 0;
+        for (const [dersAdi, dersVerisi] of Object.entries(dersler)) {
+            let dersDogru = 0, dersYanlis = 0, dersToplamGirilen = 0;
+            dersVerisi.konular.forEach(k => { 
+                dersDogru += k.dogru; 
+                dersYanlis += k.yanlis;
+                dersToplamGirilen += k.toplam; 
+            });
+            
+            const dersNet = Math.max(0, dersDogru - (dersYanlis / 4)).toFixed(2);
+            const dersBasari = dersToplamGirilen > 0 ? ((dersDogru / dersToplamGirilen) * 100).toFixed(0) : 0;
+
+            const dersBlock = document.createElement('div');
+            dersBlock.className = "ders-block";
+
+            const dersWrapper = document.createElement('div');
+            dersWrapper.className = "swipe-wrapper";
+
+            const dersDeleteBg = document.createElement('div');
+            dersDeleteBg.className = "delete-bg";
+            dersDeleteBg.innerText = "SİL";
+
+            const dersLeftBg = document.createElement('div');
+            dersLeftBg.className = "left-bg";
+            dersLeftBg.innerText = "SİL";
+
+            const dersHeaderBtn = document.createElement('div');
+            dersHeaderBtn.className = "ders-header-content swipe-btn";
+            dersHeaderBtn.innerHTML = `<span>📚 ${dersAdi} | Net: <b style="color:#ffff00">${dersNet}</b></span> <span style="font-size:9px !important; color:#ffff00 !important;">%${dersBasari} ▼</span>`;
+            
+            makeDualSwipeable(dersHeaderBtn, () => {
+                dersSil(denemeIsmi, dersAdi);
+            }, () => {
+                dersSil(denemeIsmi, dersAdi);
+            }, () => {
+                toggleDers(dersHeaderBtn);
+            });
+
+            dersWrapper.appendChild(dersDeleteBg);
+            dersWrapper.appendChild(dersLeftBg);
+            dersWrapper.appendChild(dersHeaderBtn);
+            dersBlock.appendChild(dersWrapper);
+
+            const icerikDiv = document.createElement('div');
+            icerikDiv.className = "ders-icerik";
+
+            dersVerisi.konular.forEach((konuItem) => {
+                const idx = globalIndex++;
+                const cId = `chart-${idx}`;
+                const dialogId = `dialog-${idx}`;
+                const imgId = `toriel-img-${idx}`;
+
+                const konuNet = Math.max(0, konuItem.dogru - (konuItem.yanlis / 4)).toFixed(2);
+
+                let guvenliMesaj = konuItem.torielMesaj;
+                if (!guvenliMesaj || guvenliMesaj === "undefined") {
+                    const basariOrani = konuItem.toplam > 0 ? (konuItem.dogru / konuItem.toplam) * 100 : 0;
+                    guvenliMesaj = basariOrani >= 70 
+                        ? "* Harika bir iş çıkardın, evladım!\n* Bu konuya tekrar çalışmana gerek yok." 
+                        : "* Görünüşe göre biraz zorlanmışsın...\n* Lütfen bu konuyu bir kez daha gözden geçir, olur mu?";
+                }
+
+                const konuWrapper = document.createElement('div');
+                konuWrapper.className = "swipe-wrapper";
+                konuWrapper.style.marginBottom = "4px";
+
+                const konuDeleteBg = document.createElement('div');
+                konuDeleteBg.className = "delete-bg";
+                konuDeleteBg.innerText = "SİL";
+
+                const konuLeftBg = document.createElement('div');
+                konuLeftBg.className = "left-bg";
+                konuLeftBg.innerText = "SİL";
+
+                const konuHeaderBtn = document.createElement('div');
+                konuHeaderBtn.className = "konu-header swipe-btn";
+                konuHeaderBtn.innerHTML = `<span>📌 ${konuItem.konu} (Net: ${konuNet})</span> <span style="font-size:8px !important; color:#aaa !important;" id="konu-btn-txt-${idx}">▶ Göster</span>`;
+                
+                makeDualSwipeable(konuHeaderBtn, () => {
+                    konuSil(denemeIsmi, dersAdi, konuItem.konu);
+                }, () => {
+                    konuSil(denemeIsmi, dersAdi, konuItem.konu);
+                }, () => {
+                    toggleKonu(idx, cId, dialogId, imgId, encodeURIComponent(guvenliMesaj), konuItem.dogru, konuItem.yanlis, konuItem.bos, konuHeaderBtn);
+                });
+
+                konuWrapper.appendChild(konuDeleteBg);
+                konuWrapper.appendChild(konuLeftBg);
+                konuWrapper.appendChild(konuHeaderBtn);
+
+                const detayIcerikDiv = document.createElement('div');
+                detayIcerikDiv.className = "konu-detay";
+                detayIcerikDiv.id = `konu-detay-${idx}`;
+                detayIcerikDiv.innerHTML = `
+                    <div class="chart-box"><canvas id="${cId}" width="120" height="120"></canvas></div>
+                    <div style="font-size:9px !important; text-align:center; color:#ffff00 !important; margin-top:3px; font-family:'WhFont', cursive !important;">Başarı: %${konuItem.oran} | Net: ${konuNet}</div>
+                    <div style="font-size:8px !important; text-align:center; color:#ccc !important; margin-top:2px; font-family:'WhFont', cursive !important;"><b>Soru:</b> ${konuItem.toplam} | <span style="color:#00c000 !important">D:${konuItem.dogru}</span> | <span style="color:#ff0000 !important">Y:${konuItem.yanlis}</span> | <span style="color:#888 !important">B:${konuItem.bos}</span></div>
+                    <div class="undertale-box">
+                        <img id="${imgId}" src="${TORIEL_IMG_1}" class="toriel-avatar" alt="Toriel">
+                        <div id="${dialogId}" class="dialogue-text"></div>
+                    </div>
+                `;
+
+                const konuContainer = document.createElement('div');
+                konuContainer.className = "konu-item";
+                konuContainer.style.marginBottom = "4px";
+                konuContainer.appendChild(konuWrapper);
+                konuContainer.appendChild(detayIcerikDiv);
+                icerikDiv.appendChild(konuContainer);
+            });
+
+            dersBlock.appendChild(icerikDiv);
+            anaDiv.appendChild(dersBlock);
+        }
+    }
+
+    function konuSil(denemeIsmi, dersAdi, konuAdi) {
+        if (confirm(`"${konuAdi}" konusunu silmek istediğine emin misin?`)) {
+            let tumDenemeler = getStorageData('myDenemeler', {});
+            let denemeUstBilgiler = getStorageData('myDenemeUstBilgiler', {});
+
+            if (tumDenemeler[denemeIsmi]) {
+                tumDenemeler[denemeIsmi] = tumDenemeler[denemeIsmi].filter(item => !(item.ders === dersAdi && item.konu === konuAdi));
+                
+                let kalanKayitlar = tumDenemeler[denemeIsmi];
+                if (kalanKayitlar.length === 0) {
+                    delete tumDenemeler[denemeIsmi];
+                    delete denemeUstBilgiler[denemeIsmi];
+                    setStorageData('myDenemeler', tumDenemeler);
+                    setStorageData('myDenemeUstBilgiler', denemeUstBilgiler);
+                    listeyeDon();
+                    return;
+                } else {
+                    setStorageData('myDenemeler', tumDenemeler);
+                }
+            }
+            denemeDetayGoster(denemeIsmi);
+        } else {
+            denemeDetayGoster(denemeIsmi);
+        }
+    }
+
+    function dersSil(denemeIsmi, dersAdi) {
+        if (confirm(`"${dersAdi}" dersini ve içindeki tüm konuları silmek istediğine emin misin?`)) {
+            let tumDenemeler = getStorageData('myDenemeler', {});
+            let denemeUstBilgiler = getStorageData('myDenemeUstBilgiler', {});
+
+            if (tumDenemeler[denemeIsmi]) {
+                tumDenemeler[denemeIsmi] = tumDenemeler[denemeIsmi].filter(item => item.ders !== dersAdi);
+                
+                if (tumDenemeler[denemeIsmi].length === 0) {
+                    delete tumDenemeler[denemeIsmi];
+                    delete denemeUstBilgiler[denemeIsmi];
+                    setStorageData('myDenemeler', tumDenemeler);
+                    setStorageData('myDenemeUstBilgiler', denemeUstBilgiler);
+                    listeyeDon();
+                    return;
+                } else {
+                    setStorageData('myDenemeler', tumDenemeler);
+                }
+            }
+            denemeDetayGoster(denemeIsmi);
+        } else {
+            denemeDetayGoster(denemeIsmi);
+        }
+    }
+
+    function toggleDers(headerEl) {
+        const icerik = headerEl.parentElement.nextElementSibling;
+        const isOpen = icerik.style.display === "block";
+        icerik.style.display = isOpen ? "none" : "block";
+        const spanEl = headerEl.querySelector('span:last-child');
+        spanEl.innerText = spanEl.innerText.replace(isOpen ? '▲' : '▼', isOpen ? '▼' : '▲');
+    }
+
+    function toggleKonu(idx, canvasId, dialogId, imgId, encodedText, d, y, b, headerBtn) {
+        durdurYazici();
+        const detayDiv = document.getElementById(`konu-detay-${idx}`);
+        const isOpen = detayDiv.style.display === "block";
+
+        document.querySelectorAll('.konu-detay').forEach(el => el.style.display = "none");
+        document.querySelectorAll('.konu-header span:last-child').forEach(el => el.innerText = "▶ Göster");
+
+        if (isOpen) {
+            detayDiv.style.display = "none";
+            headerBtn.querySelector('span:last-child').innerText = "▶ Göster";
+        } else {
+            detayDiv.style.display = "block";
+            headerBtn.querySelector('span:last-child').innerText = "▼ Gizle";
+            drawPieChartWithHeartMask(canvasId, d, y, b);
+            typeWriterEffect(dialogId, imgId, decodeURIComponent(encodedText));
+        }
+    }
+
+    let heartMaskImage = new Image();
+    heartMaskImage.crossOrigin = "anonymous";
+    heartMaskImage.src = "https://i.ibb.co/4Z09dCDt/ah.png";
+
+    function drawPieChartWithHeartMask(canvasId, dogru, yanlis, bos) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        let total = dogru + yanlis + bos;
+        if (total <= 0) total = 1;
+
+        let angles = [
+            { count: dogru, color: '#00c000' },   
+            { count: yanlis, color: '#ff0000' },  
+            { count: bos, color: '#555555' }      
+        ];
+
+        let cx = canvas.width / 2;
+        let cy = canvas.height / 2;
+        let radius = Math.max(cx, cy) * 1.2;
+
+        let tempCanvas = document.createElement('canvas');
+        tempCanvas.width = canvas.width;
+        tempCanvas.height = canvas.height;
+        let tempCtx = tempCanvas.getContext('2d');
+
+        let currentAngle = -Math.PI / 2;
+        angles.forEach(slice => {
+            if (slice.count <= 0) return;
+            let sliceAngle = (slice.count / total) * (2 * Math.PI);
+            tempCtx.beginPath();
+            tempCtx.moveTo(cx, cy);
+            tempCtx.arc(cx, cy, radius, currentAngle, currentAngle + sliceAngle + 0.05);
+            tempCtx.closePath();
+            tempCtx.fillStyle = slice.color;
+            tempCtx.strokeStyle = slice.color;
+            tempCtx.lineWidth = 2;
+            tempCtx.fill();
+            tempCtx.stroke();
+            currentAngle += sliceAngle;
+        });
+
+        if (heartMaskImage.complete && heartMaskImage.naturalWidth !== 0) {
+            tempCtx.globalCompositeOperation = 'destination-in';
+            tempCtx.drawImage(heartMaskImage, 0, 0, tempCanvas.width, tempCanvas.height);
+        }
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(tempCanvas, 0, 0);
+    }
+
+    function drawAnimatedGroupedBarChart(canvasId, dataList) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (!dataList || dataList.length === 0) return;
+
+        let dynamicWidth = Math.max(380, dataList.length * 50 + 35);
+        canvas.width = dynamicWidth;
+        canvas.style.width = dynamicWidth + "px";
+
+        let maxSoru = 1;
+        dataList.forEach(item => {
+            let m = Math.max(item.dogru, item.yanlis, item.bos);
+            if (m > maxSoru) maxSoru = m;
+        });
+
+        let paddingBottom = 20, paddingTop = 10;
+        let chartHeight = canvas.height - paddingBottom - paddingTop;
+        let chartWidth = canvas.width;
+        let startTime = performance.now();
+        let duration = 600;
+
+        barHitboxes = [];
+
+        function animate(currentTime) {
+            let elapsed = currentTime - startTime;
+            let progress = Math.min(elapsed / duration, 1);
+            let easeProgress = 1 - Math.pow(1 - progress, 3);
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#333333';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                let y = paddingTop + (chartHeight / 4) * i;
+                ctx.beginPath(); ctx.moveTo(25, y); ctx.lineTo(chartWidth - 10, y); ctx.stroke();
+                let valLabel = Math.round(maxSoru - (maxSoru / 4) * i);
+                ctx.fillStyle = '#888888'; ctx.font = '7px sans-serif'; ctx.fillText(valLabel, 2, y + 3);
             }
 
-            let toggleImg = false;
-            aktifYaziciTimer = setInterval(() => {
-                if (i < text.length) {
-                    textContainer.innerText += text.charAt(i);
-                    if (text.charAt(i).trim() !== "") {
-                        toggleImg = !toggleImg;
-                        imgElement.src = toggleImg ? TORIEL_IMG_2 : TORIEL_IMG_1;
-                    }
-                    i++;
-                } else {
-                    clearInterval(aktifYaziciTimer);
-                    aktifYaziciTimer = null;
-                    imgElement.src = TORIEL_IMG_1;
-                    if (torielAudio) { torielAudio.pause(); torielAudio.currentTime = 0; }
+            let groupWidth = (chartWidth - 35) / dataList.length;
+            let barWidth = Math.max(3, Math.min(9, groupWidth / 4)); 
+            let currentHitboxes = [];
+
+            dataList.forEach((item, index) => {
+                let groupX = 35 + index * groupWidth + (groupWidth - (barWidth * 3 + 4)) / 2;
+                let hD = (item.dogru / maxSoru) * chartHeight * easeProgress;
+                let hY = (item.yanlis / maxSoru) * chartHeight * easeProgress;
+                let hB = (item.bos / maxSoru) * chartHeight * easeProgress;
+                let baseY = paddingTop + chartHeight;
+
+                let xD = groupX, xY = groupX + barWidth + 2, xB = groupX + (barWidth * 2) + 4;
+
+                ctx.fillStyle = '#00c000'; ctx.fillRect(xD, baseY - hD, barWidth, hD);
+                ctx.fillStyle = '#ff0000'; ctx.fillRect(xY, baseY - hY, barWidth, hY);
+                ctx.fillStyle = '#777777'; ctx.fillRect(xB, baseY - hB, barWidth, hB);
+
+                if (progress === 1) {
+                    ctx.fillStyle = '#ffffff'; ctx.font = '6px sans-serif'; ctx.textAlign = 'center';
+                    ctx.fillText(item.dogru, xD + barWidth/2, baseY - hD - 2);
+                    ctx.fillText(item.yanlis, xY + barWidth/2, baseY - hY - 2);
+                    ctx.fillText(item.bos, xB + barWidth/2, baseY - hB - 2);
+                    ctx.textAlign = 'start';
                 }
-            }, 45);
+
+                ctx.fillStyle = '#ffffff'; ctx.font = '7px "WhFont", sans-serif'; ctx.textAlign = 'center';
+                let numX = groupX + barWidth + 2;
+                ctx.fillText(item.no, numX, canvas.height - 5);
+                ctx.textAlign = 'start';
+
+                if (progress === 1) {
+                    currentHitboxes.push({
+                        x: groupX - 4, y: 0, w: (barWidth * 3 + 4) + 8, h: canvas.height,
+                        centerX: numX, topY: paddingTop,
+                        text: `Deneme ${item.no} -> D: ${item.dogru} | Y: ${item.yanlis} | B: ${item.bos}`
+                    });
+                }
+            });
+
+            barHitboxes = currentHitboxes;
+            if (progress < 1) requestAnimationFrame(animate);
+        }
+        requestAnimationFrame(animate);
+    }
+
+    const barBoxEl = document.getElementById('barCanvasBox');
+    const tooltipEl = document.getElementById('chartTooltip');
+
+    barBoxEl.addEventListener('mousemove', (e) => {
+        const rect = barBoxEl.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left + barBoxEl.scrollLeft;
+        const mouseY = e.clientY - rect.top;
+        let hovered = null;
+        barHitboxes.forEach(box => {
+            if (mouseX >= box.x && mouseX <= box.x + box.w && mouseY >= box.y && mouseY <= box.y + box.h) hovered = box;
+        });
+        if (hovered) {
+            tooltipEl.style.display = 'block';
+            tooltipEl.innerText = hovered.text;
+            tooltipEl.style.left = hovered.centerX + 'px';
+            tooltipEl.style.top = (hovered.topY - 10) + 'px';
+        } else {
+            tooltipEl.style.display = 'none';
+        }
+    });
+
+    barBoxEl.addEventListener('mouseleave', () => { tooltipEl.style.display = 'none'; });
+
+    function durdurYazici() {
+        if (aktifYaziciTimer) { clearInterval(aktifYaziciTimer); aktifYaziciTimer = null; }
+        const sansAudio = document.getElementById('sansVoice');
+        if (sansAudio) { sansAudio.pause(); sansAudio.currentTime = 0; }
+        const torielVoice = document.getElementById('torielVoice');
+        if (torielVoice) { torielVoice.pause(); torielVoice.currentTime = 0; }
+    }
+
+    function typeWriterWelcome(elementId, imgId, text) {
+        durdurYazici();
+        let i = 0;
+        const textContainer = document.getElementById(elementId);
+        const imgElement = document.getElementById(imgId);
+        const torielAudio = document.getElementById('torielVoice');
+        if (!textContainer || !imgElement || !text) return;
+        textContainer.innerText = "";
+        imgElement.src = TORIEL_IMG_1;
+
+        if (torielAudio) {
+            torielAudio.loop = true;
+            torielAudio.currentTime = 0;
+            torielAudio.play().catch(e => {});
         }
 
-        function typeWriterEffect(elementId, imgId, text) {
-            durdurYazici();
-            let i = 0;
-            const textContainer = document.getElementById(elementId);
-            const imgElement = document.getElementById(imgId);
-            const torielVoice = document.getElementById('torielVoice');
-            if (!textContainer || !imgElement || !text) return;
-            textContainer.innerText = "";
-            imgElement.src = TORIEL_IMG_1;
-
-            if (torielVoice) {
-                torielVoice.loop = true;
-                torielVoice.currentTime = 0;
-                torielVoice.play().catch(e => {});
+        let toggleImg = false;
+        aktifYaziciTimer = setInterval(() => {
+            if (i < text.length) {
+                textContainer.innerText += text.charAt(i);
+                if (text.charAt(i).trim() !== "") {
+                    toggleImg = !toggleImg;
+                    imgElement.src = toggleImg ? TORIEL_IMG_2 : TORIEL_IMG_1;
+                }
+                i++;
+            } else {
+                clearInterval(aktifYaziciTimer);
+                aktifYaziciTimer = null;
+                imgElement.src = TORIEL_IMG_1;
+                if (torielAudio) { torielAudio.pause(); torielAudio.currentTime = 0; }
             }
+        }, 45);
+    }
 
-            let toggleImg = false;
-            aktifYaziciTimer = setInterval(() => {
-                if (i < text.length) {
-                    textContainer.innerText += text.charAt(i);
-                    if (text.charAt(i).trim() !== "") {
-                        toggleImg = !toggleImg;
-                        imgElement.src = toggleImg ? TORIEL_IMG_2 : TORIEL_IMG_1;
-                    }
-                    i++;
-                } else {
-                    clearInterval(aktifYaziciTimer);
-                    aktifYaziciTimer = null;
-                    imgElement.src = TORIEL_IMG_1;
-                    if (torielVoice) { torielVoice.pause(); torielVoice.currentTime = 0; }
+    function typeWriterEffect(elementId, imgId, text) {
+        durdurYazici();
+        let i = 0;
+        const textContainer = document.getElementById(elementId);
+        const imgElement = document.getElementById(imgId);
+        const torielVoice = document.getElementById('torielVoice');
+        if (!textContainer || !imgElement || !text) return;
+        textContainer.innerText = "";
+        imgElement.src = TORIEL_IMG_1;
+
+        if (torielVoice) {
+            torielVoice.loop = true;
+            torielVoice.currentTime = 0;
+            torielVoice.play().catch(e => {});
+        }
+
+        let toggleImg = false;
+        aktifYaziciTimer = setInterval(() => {
+            if (i < text.length) {
+                textContainer.innerText += text.charAt(i);
+                if (text.charAt(i).trim() !== "") {
+                    toggleImg = !toggleImg;
+                    imgElement.src = toggleImg ? TORIEL_IMG_2 : TORIEL_IMG_1;
                 }
-            }, 45);
-        }
+                i++;
+            } else {
+                clearInterval(aktifYaziciTimer);
+                aktifYaziciTimer = null;
+                imgElement.src = TORIEL_IMG_1;
+                if (torielVoice) { torielVoice.pause(); torielVoice.currentTime = 0; }
+            }
+        }, 45);
+    }
 
-        function typeWriterSans(text) {
-            durdurYazici();
-            let i = 0;
-            const textContainer = document.getElementById('shopDialogueText');
-            const sansAudio = document.getElementById('sansVoice');
-            if (!textContainer || !text) return;
-            textContainer.innerText = "";
+    function typeWriterSans(text) {
+        durdurYazici();
+        let i = 0;
+        const textContainer = document.getElementById('shopDialogueText');
+        const sansAudio = document.getElementById('sansVoice');
+        if (!textContainer || !text) return;
+        textContainer.innerText = "";
 
-            if (sansAudio) { sansAudio.loop = true; sansAudio.currentTime = 0; sansAudio.play().catch(e => {}); }
+        if (sansAudio) { sansAudio.loop = true; sansAudio.currentTime = 0; sansAudio.play().catch(e => {}); }
 
-            aktifYaziciTimer = setInterval(() => {
-                if (i < text.length) {
-                    textContainer.innerText += text.charAt(i);
-                    i++;
-                } else {
-                    clearInterval(aktifYaziciTimer);
-                    aktifYaziciTimer = null;
-                    if (sansAudio) { sansAudio.pause(); sansAudio.currentTime = 0.0; }
-                }
-            }, 20);
-        }
+        aktifYaziciTimer = setInterval(() => {
+            if (i < text.length) {
+                textContainer.innerText += text.charAt(i);
+                i++;
+            } else {
+                clearInterval(aktifYaziciTimer);
+                aktifYaziciTimer = null;
+                if (sansAudio) { sansAudio.pause(); sansAudio.currentTime = 0.0; }
+            }
+        }, 20);
+    }
 
-        function listeyeDon() {
-            durdurYazici();
-            document.getElementById('detayEkrani').style.display = "none";
-            document.getElementById('listeEkrani').style.display = "block";
-            denemeleriYukle();
-        }
+    function listeyeDon() {
+        durdurYazici();
+        document.getElementById('detayEkrani').style.display = "none";
+        document.getElementById('listeEkrani').style.display = "block";
+        denemeleriYukle();
+    }
     </script>
 </body>
 </html>
