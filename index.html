@@ -691,18 +691,43 @@
                     <input type="date" id="denemeTarihi">
                 </div>
             </div>
+            
+            <!-- KAYITLI DERSLER / HIZLI SEÇİM ALANI -->
+            <div class="row" style="margin-bottom: 6px;">
+                <div class="form-group" style="flex: 1; margin-bottom:0;">
+                    <label style="color:#ffff00 !important;">KAYITLI DERSLERDEN SEÇ</label>
+                    <select id="kayitliDersSecim" onchange="dersSecimiGuncelle(this.value)">
+                        <option value="">* Ders seç veya yeni yaz...</option>
+                    </select>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="form-group" style="flex: 1.5;">
                     <label>DERS ADI</label>
-                    <input type="text" id="dersAdi" placeholder="Matematik">
+                    <input type="text" id="dersAdi" placeholder="Matematik" oninput="dersAdiDegisti(this.value)">
                 </div>
                 <div class="form-group" style="flex: 1;">
                     <label>DERS SORU</label>
                     <input type="number" id="dersSoruSayisi" placeholder="40">
                 </div>
             </div>
+
+            <!-- KAYITLI KONULAR / HIZLI SEÇİM ALANI -->
+            <div class="row" style="margin-bottom: 6px;">
+                <div class="form-group" style="flex: 1; margin-bottom:0;">
+                    <label style="color:#ffff00 !important;">KAYITLI KONULARDAN SEÇ</label>
+                    <select id="kayitliKonuSecim" onchange="konuSecimiGuncelle(this.value)">
+                        <option value="">* Konu seç veya yeni yaz...</option>
+                    </select>
+                </div>
+            </div>
+
             <div class="form-group">
-                <label>KONU ADI</label>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <label>KONU ADI</label>
+                    <button type="button" onclick="hafizayiTemizlePrompt()" style="background:none; border:none; color:#ff5555 !important; font-size:7px; cursor:pointer; font-family:'WhFont', cursive !important;">[Kayıtlı Ders/Konuları Sil]</button>
+                </div>
                 <input type="text" id="konuAdi" placeholder="Fonksiyonlar">
             </div>
             <div class="row">
@@ -794,7 +819,6 @@
     });
 
     window.onload = function() {
-        // Sayfa yüklenince Toriel'in konuşması garanti altına alındı
         setTimeout(() => {
             const welcomeText = "* Merhaba evladım...\n* Deneme sistemine hoşgeldin!\n* Başlamak için aşağıdaki düğmeye basabilirsin.";
             typeWriterWelcome("welcomeDialogue", "welcomeTorielImg", welcomeText);
@@ -805,7 +829,82 @@
         if(tarihInput) tarihInput.value = bugun;
 
         hedefDersleriYukle();
+        hafizadanDersVeKonulariYukle();
     };
+
+    // --- DERS VE KONU HAFIZA YÖNETİMİ ---
+    function kayitliDersVeKonulariKaydet(dersAdi, konuAdi) {
+        if (!dersAdi) return;
+        let hafiza = getStorageData('myDersKonuHafiza', {});
+        if (!hafiza[dersAdi]) {
+            hafiza[dersAdi] = [];
+        }
+        if (konuAdi && !hafiza[dersAdi].includes(konuAdi)) {
+            hafiza[dersAdi].push(konuAdi);
+        }
+        setStorageData('myDersKonuHafiza', hafiza);
+        hafizadanDersVeKonulariYukle();
+    }
+
+    function hafizadanDersVeKonulariYukle() {
+        let hafiza = getStorageData('myDersKonuHafiza', {});
+        let dersSelect = document.getElementById('kayitliDersSecim');
+        if (!dersSelect) return;
+
+        dersSelect.innerHTML = '<option value="">* Ders seç veya yeni yaz...</option>';
+        Object.keys(hafiza).forEach(ders => {
+            let opt = document.createElement('option');
+            opt.value = ders;
+            opt.innerText = ders;
+            dersSelect.appendChild(opt);
+        });
+
+        // Aktif dersin konularını güncelle
+        let aktifDers = document.getElementById('dersAdi').value.trim();
+        konuSecimListesiniGuncelle(aktifDers);
+    }
+
+    function dersSecimiGuncelle(secilenDers) {
+        if (!secilenDers) return;
+        document.getElementById('dersAdi').value = secilenDers;
+        konuSecimListesiniGuncelle(secilenDers);
+    }
+
+    function dersAdiDegisti(val) {
+        konuSecimListesiniGuncelle(val.trim());
+    }
+
+    function konuSecimListesiniGuncelle(dersAdi) {
+        let konuSelect = document.getElementById('kayitliKonuSecim');
+        if (!konuSelect) return;
+        konuSelect.innerHTML = '<option value="">* Konu seç veya yeni yaz...</option>';
+
+        if (!dersAdi) return;
+        let hafiza = getStorageData('myDersKonuHafiza', {});
+        let konular = hafiza[dersAdi] || [];
+
+        konular.forEach(konu => {
+            let opt = document.createElement('option');
+            opt.value = konu;
+            opt.innerText = konu;
+            konuSelect.appendChild(opt);
+        });
+    }
+
+    function konuSecimiGuncelle(secilenKonu) {
+        if (!secilenKonu) return;
+        document.getElementById('konuAdi').value = secilenKonu;
+    }
+
+    function hafizayiTemizlePrompt() {
+        if (confirm("Kaydedilmiş tüm ders ve konu hafızasını silmek istiyor musun? (Var olan deneme kayıtların silinmez)")) {
+            localStorage.removeItem('myDersKonuHafiza');
+            hafizadanDersVeKonulariYukle();
+            document.getElementById('kayitliKonuSecim').innerHTML = '<option value="">* Konu seç veya yeni yaz...</option>';
+            alert("Ders ve konu hafızası başarıyla temizlendi!");
+        }
+    }
+    // --------------------------------------
 
     function hedefDersEkle() {
         let dersAdi = document.getElementById('hedefDersAdi').value.trim();
@@ -1275,6 +1374,9 @@
             gosterFormUyarisi(`* Doğru (${dogru}), yanlış (${yanlis}) and boş (${bos}) toplamı, konunun toplam soru sayısına (${toplamSoru}) eşit olmalıdır!`);
             return;
         }
+
+        // Ders ve konuyu kalıcı hafızaya kaydet
+        kayitliDersVeKonulariKaydet(dersAdi, konuAdi);
 
         let tumDenemeler = getStorageData('myDenemeler', {});
         let denemeUstBilgiler = getStorageData('myDenemeUstBilgiler', {});
@@ -1890,8 +1992,13 @@
         if (!textContainer || !text) return;
         textContainer.innerText = "";
 
-        if (sansAudio) { sansAudio.loop = true; sansAudio.currentTime = 0; sansAudio.play().catch(e => {}); }
+        if (sansAudio) { 
+            sansAudio.loop = true; 
+            sansAudio.currentTime = 0; 
+            sansAudio.play().catch(e => {}); 
+        }
 
+        // Sans konuşurken harf hızına tam uyumlu ayarlama
         aktifYaziciTimer = setInterval(() => {
             if (i < text.length) {
                 textContainer.innerText += text.charAt(i);
