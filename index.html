@@ -1174,9 +1174,8 @@
             const touchMove = (e) => {
                 const currentX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
                 const diff = currentX - startX;
-                if (Math.abs(diff) > 10) {
+                if (Math.abs(diff) > 5) {
                     isDragging = true;
-                    if (e.cancelable) e.preventDefault();
                 }
                 if (Math.abs(diff) < 160) {
                     currentTranslate = diff;
@@ -1190,9 +1189,9 @@
                 document.removeEventListener('touchmove', touchMove);
                 document.removeEventListener('touchend', touchEnd);
 
-                if (currentTranslate > 80) {
+                if (currentTranslate > 50) {
                     onDeleteCallback();
-                } else if (currentTranslate < -80) {
+                } else if (currentTranslate < -50) {
                     onLeftSwipeCallback();
                 } else {
                     currentTranslate = 0;
@@ -1548,7 +1547,6 @@
                 if (tumDenemeler[denemeIsmi]) {
                     tumDenemeler[denemeIsmi] = tumDenemeler[denemeIsmi].filter(item => !(item.ders === dersAdi && item.konu === konuAdi));
                     
-                    // Ders içinde konu kalmadıysa dersi silmiş oluyoruz (otomatik filtreleniyor)
                     let kalanKayitlar = tumDenemeler[denemeIsmi];
                     if (kalanKayitlar.length === 0) {
                         delete tumDenemeler[denemeIsmi];
@@ -1575,7 +1573,6 @@
                 if (tumDenemeler[denemeIsmi]) {
                     tumDenemeler[denemeIsmi] = tumDenemeler[denemeIsmi].filter(item => item.ders !== dersAdi);
                     
-                    // Deneme içinde ders kalmazsa denemeyi sil
                     if (tumDenemeler[denemeIsmi].length === 0) {
                         delete tumDenemeler[denemeIsmi];
                         delete denemeUstBilgiler[denemeIsmi];
@@ -1886,4 +1883,4 @@
         }
     </script>
 </body>
-</html> 
+</html>
