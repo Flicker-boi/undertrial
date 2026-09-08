@@ -997,7 +997,6 @@
             typeWriterReport("bbDialogue", "bbHosImg", raporMetni);
         }
 
-        // Rapor ekranında sadece hoş.png sabit kalır, toriel.mp3 ÇALMAZ
         function typeWriterReport(elementId, imgId, text) {
             durdurYazici();
             let i = 0;
@@ -1416,6 +1415,15 @@
                 dersler[item.ders].konular.push(item);
             });
 
+            if (Object.keys(dersler).length === 0) {
+                if (tumDenemeler[denemeIsmi]) delete tumDenemeler[denemeIsmi];
+                if (denemeUstBilgiler[denemeIsmi]) delete denemeUstBilgiler[denemeIsmi];
+                setStorageData('myDenemeler', tumDenemeler);
+                setStorageData('myDenemeUstBilgiler', denemeUstBilgiler);
+                listeyeDon();
+                return;
+            }
+
             let globalIndex = 0;
             for (const [dersAdi, dersVerisi] of Object.entries(dersler)) {
                 let dersDogru = 0, dersYanlis = 0, dersToplamGirilen = 0;
@@ -1431,11 +1439,33 @@
                 const dersBlock = document.createElement('div');
                 dersBlock.className = "ders-block";
 
-                const dersHeaderBtn = document.createElement('button');
-                dersHeaderBtn.className = "ders-header-content";
+                const dersWrapper = document.createElement('div');
+                dersWrapper.className = "swipe-wrapper";
+
+                const dersDeleteBg = document.createElement('div');
+                dersDeleteBg.className = "delete-bg";
+                dersDeleteBg.innerText = "SİL";
+
+                const dersLeftBg = document.createElement('div');
+                dersLeftBg.className = "left-bg";
+                dersLeftBg.innerText = "SİL";
+
+                const dersHeaderBtn = document.createElement('div');
+                dersHeaderBtn.className = "ders-header-content swipe-btn";
                 dersHeaderBtn.innerHTML = `<span>📚 ${dersAdi} | Net: <b style="color:#ffff00">${dersNet}</b></span> <span style="font-size:9px !important; color:#ffff00 !important;">%${dersBasari} ▼</span>`;
-                dersHeaderBtn.onclick = () => toggleDers(dersHeaderBtn);
-                dersBlock.appendChild(dersHeaderBtn);
+                
+                makeDualSwipeable(dersHeaderBtn, () => {
+                    dersSil(denemeIsmi, dersAdi);
+                }, () => {
+                    dersSil(denemeIsmi, dersAdi);
+                }, () => {
+                    toggleDers(dersHeaderBtn);
+                });
+
+                dersWrapper.appendChild(dersDeleteBg);
+                dersWrapper.appendChild(dersLeftBg);
+                dersWrapper.appendChild(dersHeaderBtn);
+                dersBlock.appendChild(dersWrapper);
 
                 const icerikDiv = document.createElement('div');
                 icerikDiv.className = "ders-icerik";
@@ -1456,11 +1486,33 @@
                             : "* Görünüşe göre biraz zorlanmışsın...\n* Lütfen bu konuyu bir kez daha gözden geçir, olur mu?";
                     }
 
-                    const konuHeaderBtn = document.createElement('button');
-                    konuHeaderBtn.className = "konu-header";
+                    const konuWrapper = document.createElement('div');
+                    konuWrapper.className = "swipe-wrapper";
+                    konuWrapper.style.marginBottom = "4px";
+
+                    const konuDeleteBg = document.createElement('div');
+                    konuDeleteBg.className = "delete-bg";
+                    konuDeleteBg.innerText = "SİL";
+
+                    const konuLeftBg = document.createElement('div');
+                    konuLeftBg.className = "left-bg";
+                    konuLeftBg.innerText = "SİL";
+
+                    const konuHeaderBtn = document.createElement('div');
+                    konuHeaderBtn.className = "konu-header swipe-btn";
                     konuHeaderBtn.innerHTML = `<span>📌 ${konuItem.konu} (Net: ${konuNet})</span> <span style="font-size:8px !important; color:#aaa !important;" id="konu-btn-txt-${idx}">▶ Göster</span>`;
                     
-                    konuHeaderBtn.onclick = () => toggleKonu(idx, cId, dialogId, imgId, encodeURIComponent(guvenliMesaj), konuItem.dogru, konuItem.yanlis, konuItem.bos, konuHeaderBtn);
+                    makeDualSwipeable(konuHeaderBtn, () => {
+                        konuSil(denemeIsmi, dersAdi, konuItem.konu);
+                    }, () => {
+                        konuSil(denemeIsmi, dersAdi, konuItem.konu);
+                    }, () => {
+                        toggleKonu(idx, cId, dialogId, imgId, encodeURIComponent(guvenliMesaj), konuItem.dogru, konuItem.yanlis, konuItem.bos, konuHeaderBtn);
+                    });
+
+                    konuWrapper.appendChild(konuDeleteBg);
+                    konuWrapper.appendChild(konuLeftBg);
+                    konuWrapper.appendChild(konuHeaderBtn);
 
                     const detayIcerikDiv = document.createElement('div');
                     detayIcerikDiv.className = "konu-detay";
@@ -1478,7 +1530,7 @@
                     const konuContainer = document.createElement('div');
                     konuContainer.className = "konu-item";
                     konuContainer.style.marginBottom = "4px";
-                    konuContainer.appendChild(konuHeaderBtn);
+                    konuContainer.appendChild(konuWrapper);
                     konuContainer.appendChild(detayIcerikDiv);
                     icerikDiv.appendChild(konuContainer);
                 });
@@ -1488,8 +1540,61 @@
             }
         }
 
+        function konuSil(denemeIsmi, dersAdi, konuAdi) {
+            if (confirm(`"${konuAdi}" konusunu silmek istediğine emin misin?`)) {
+                let tumDenemeler = getStorageData('myDenemeler', {});
+                let denemeUstBilgiler = getStorageData('myDenemeUstBilgiler', {});
+
+                if (tumDenemeler[denemeIsmi]) {
+                    tumDenemeler[denemeIsmi] = tumDenemeler[denemeIsmi].filter(item => !(item.ders === dersAdi && item.konu === konuAdi));
+                    
+                    // Ders içinde konu kalmadıysa dersi silmiş oluyoruz (otomatik filtreleniyor)
+                    let kalanKayitlar = tumDenemeler[denemeIsmi];
+                    if (kalanKayitlar.length === 0) {
+                        delete tumDenemeler[denemeIsmi];
+                        delete denemeUstBilgiler[denemeIsmi];
+                        setStorageData('myDenemeler', tumDenemeler);
+                        setStorageData('myDenemeUstBilgiler', denemeUstBilgiler);
+                        listeyeDon();
+                        return;
+                    } else {
+                        setStorageData('myDenemeler', tumDenemeler);
+                    }
+                }
+                denemeDetayGoster(denemeIsmi);
+            } else {
+                denemeDetayGoster(denemeIsmi);
+            }
+        }
+
+        function dersSil(denemeIsmi, dersAdi) {
+            if (confirm(`"${dersAdi}" dersini ve içindeki tüm konuları silmek istediğine emin misin?`)) {
+                let tumDenemeler = getStorageData('myDenemeler', {});
+                let denemeUstBilgiler = getStorageData('myDenemeUstBilgiler', {});
+
+                if (tumDenemeler[denemeIsmi]) {
+                    tumDenemeler[denemeIsmi] = tumDenemeler[denemeIsmi].filter(item => item.ders !== dersAdi);
+                    
+                    // Deneme içinde ders kalmazsa denemeyi sil
+                    if (tumDenemeler[denemeIsmi].length === 0) {
+                        delete tumDenemeler[denemeIsmi];
+                        delete denemeUstBilgiler[denemeIsmi];
+                        setStorageData('myDenemeler', tumDenemeler);
+                        setStorageData('myDenemeUstBilgiler', denemeUstBilgiler);
+                        listeyeDon();
+                        return;
+                    } else {
+                        setStorageData('myDenemeler', tumDenemeler);
+                    }
+                }
+                denemeDetayGoster(denemeIsmi);
+            } else {
+                denemeDetayGoster(denemeIsmi);
+            }
+        }
+
         function toggleDers(headerEl) {
-            const icerik = headerEl.nextElementSibling;
+            const icerik = headerEl.parentElement.nextElementSibling;
             const isOpen = icerik.style.display === "block";
             icerik.style.display = isOpen ? "none" : "block";
             const spanEl = headerEl.querySelector('span:last-child');
@@ -1782,3 +1887,4 @@
     </script>
 </body>
 </html>
+```[cite: 1]
