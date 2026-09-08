@@ -749,6 +749,18 @@
     <audio id="torielVoice" src="toriel.mp3"></audio>
 
     <script>
+    // Service Worker Kaydı
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+                .then((reg) => {
+                    console.log('Service Worker başarıyla kaydedildi:', reg.scope);
+                })
+                .catch((err) => {
+                    console.log('Service Worker kaydı başarısız:', err);
+                });
+        });
+        
         const TORIEL_IMG_1 = "https://i.ibb.co/bgVjVpPK/toriel.png";
         const TORIEL_IMG_2 = "https://i.ibb.co/nN37fGZq/toriel2.png";
         
