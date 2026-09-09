@@ -1,4 +1,4 @@
-const CACHE_NAME = 'undertale-deneme-v2';
+const CACHE_NAME = 'undertale-deneme-v3';
 
 const ASSETS_TO_CACHE = [
     './',
@@ -34,7 +34,7 @@ self.addEventListener('install', (event) => {
     self.skipWaiting();
 });
 
-// Eski Önbelleklerin Temizlenmesi (Versiyon güncellendiğinde eskiler silinir)
+// Eski Önbelleklerin Temizlenmesi
 self.addEventListener('activate', (event) => {
     event.waitUntil(
         caches.keys().then((keyList) => {
@@ -51,31 +51,71 @@ self.addEventListener('activate', (event) => {
     self.clients.claim();
 });
 
-// Geliştirilmiş Fetch Stratejisi (Özellikle ses ve video dosyaları için)
+// Medya dosyaları (mp3, mp4) için Range (Parçalı) İstek Destekli Fetch Stratejisi
 self.addEventListener('fetch', (event) => {
-    // Tarayıcı dış kaynaklı istekleri (örneğin ibb.co resimleri) ve kendi dosyalarımızı yakala
+    const url = new URL(event.request.url);
+
+    // Eğer istek mp3 veya mp4 dosyalarına yapıldıysa özel akış uygula
+    if (url.pathname.endsWith('.mp3') || url.pathname.endsWith('.mp4')) {
+        event.respondWith(
+            caches.open(CACHE_NAME).then(async (cache) => {
+                const cachedResponse = await cache.match(event.request);
+                
+                if (cachedResponse) {
+                    // Tarayıcı medya oynatmak için Range isteği (parça isteği) gönderebilir
+                    const rangeHeader = event.request.headers.get('range');
+                    if (!rangeHeader) {
+                        return cachedResponse;
+                    }
+
+                    const arrayBuffer = await cachedResponse.arrayBuffer();
+                    const bytes = rangeHeader.replace(/bytes=/, "").split("-");
+                    const start = parseInt(bytes[0], 10);
+                    const end = bytes[1] ? parseInt(bytes[1], 10) : arrayBuffer.byteLength - 1;
+                    const chunk = arrayBuffer.slice(start, end + 1);
+
+                    return new Response(chunk, {
+                        status: 206,
+                        statusText: 'Partial Content',
+                        headers: [
+                            ['Content-Type', cachedResponse.headers.get('Content-Type') || (url.pathname.endsWith('.mp4') ? 'video/mp4' : 'audio/mpeg')],
+                            ['Content-Range', `bytes ${start}-${end}/${arrayBuffer.byteLength}`],
+                            ['Content-Length', chunk.byteLength],
+                            ['Accept-Ranges', 'bytes']
+                        ]
+                    });
+                }
+
+                // Önbellekte yoksa internetten çekmeyi dene
+                try {
+                    const networkResponse = await fetch(event.request);
+                    cache.put(event.request, networkResponse.clone());
+                    return networkResponse;
+                } catch (error) {
+                    return new Response('Medya çevrimdışı olarak yüklenemedi.', { status: 404 });
+                }
+            })
+        );
+        return;
+    }
+
+    // Diğer standart dosyalar için normal önbellek stratejisi
     event.respondWith(
         caches.match(event.request).then((cachedResponse) => {
             if (cachedResponse) {
-                // Önbellekte varsa direkt döndür
                 return cachedResponse;
             }
-
-            // Önbellekte yoksa internetten çek ve önbelleğe klonlayıp kaydet
             return fetch(event.request).then((response) => {
-                // Geçerli bir yanıt alıp almadığımızı kontrol et
-                if (!response || response.status !== 200 || response.type !== 'basic' && !event.request.url.startsWith('http')) {
+                if (!response || response.status !== 200 || (response.type !== 'basic' && !event.request.url.startsWith('http'))) {
                     return response;
                 }
-
                 let responseToCache = response.clone();
                 caches.open(CACHE_NAME).then((cache) => {
                     cache.put(event.request, responseToCache);
                 });
-
                 return response;
             }).catch(() => {
-                // Çevrimdışıyken ve dosya önbellekte yoksa yapılabilecek alternatif fallback işlemleri
+                // Çevrimdışı fallback
             });
         })
     );
