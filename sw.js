@@ -1,47 +1,15 @@
-const CACHE_NAME = 'undertale-deneme-v4';
+const CACHE_NAME = 'undertale-deneme-v6';
 
-const ASSETS_TO_CACHE = [
-    './',
-    './index.html',
-    './manifest.json',
-    './nn.png',
-    './neden.gif',
-    './kaka.png',
-    './bb.gif',
-    './hoş.png',
-    './lan.png',
-    './nik.mp4',
-    './fallendown.mp3',
-    './wew.mp3',
-    './sans.mp3',
-    './toriel.mp3',
-    './shop3.mp3',
-    './fonts/wh.ttf',
-    './fonts/notethis.ttf',
-    'https://i.ibb.co/bgVjVpPK/toriel.png',
-    'https://i.ibb.co/nN37fGZq/toriel2.png',
-    'https://i.ibb.co/4Z09dCDt/ah.png'
-];
-
-// Service Worker Kurulumu ve Dosyaların Önbelleğe Alınması
 self.addEventListener('install', (event) => {
-    event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-            console.log('[Service Worker] Dosyalar önbelleğe alınıyor...');
-            return cache.addAll(ASSETS_TO_CACHE);
-        })
-    );
     self.skipWaiting();
 });
 
-// Eski Önbelleklerin Temizlenmesi
 self.addEventListener('activate', (event) => {
     event.waitUntil(
         caches.keys().then((keyList) => {
             return Promise.all(
                 keyList.map((key) => {
                     if (key !== CACHE_NAME) {
-                        console.log('[Service Worker] Eski önbellek siliniyor:', key);
                         return caches.delete(key);
                     }
                 })
@@ -51,23 +19,23 @@ self.addEventListener('activate', (event) => {
     self.clients.claim();
 });
 
-// Fetch (Ağ İsteklerini Yakalama) Stratejisi
 self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
 
-    // MP3 ve MP4 dosyaları için çevrimdışı önbellek desteği
+    // Medya dosyaları için güvenli fetch stratejisi
     if (url.pathname.endsWith('.mp3') || url.pathname.endsWith('.mp4')) {
         event.respondWith(
             caches.open(CACHE_NAME).then(async (cache) => {
                 const cachedResponse = await cache.match(event.request);
-                
                 if (cachedResponse) {
                     return cachedResponse;
                 }
-
                 try {
                     const networkResponse = await fetch(event.request);
-                    cache.put(event.request, networkResponse.clone());
+                    // Sadece tam ve başarılı yanıtları (200) önbelleğe kaydet (206'yı ve hataları atla)
+                    if (networkResponse && networkResponse.status === 200) {
+                        cache.put(event.request, networkResponse.clone());
+                    }
                     return networkResponse;
                 } catch (error) {
                     return new Response('Medya çevrimdışı yüklenemedi.', { status: 404 });
@@ -77,14 +45,12 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // Diğer standart dosyalar için normal önbellek ve ağ stratejisi
+    // Diğer standart dosyalar
     event.respondWith(
         caches.match(event.request).then((cachedResponse) => {
-            if (cachedResponse) {
-                return cachedResponse;
-            }
+            if (cachedResponse) return cachedResponse;
             return fetch(event.request).then((response) => {
-                if (!response || response.status !== 200 || (response.type !== 'basic' && !event.request.url.startsWith('http'))) {
+                if (!response || response.status !== 200) {
                     return response;
                 }
                 let responseToCache = response.clone();
@@ -92,9 +58,7 @@ self.addEventListener('fetch', (event) => {
                     cache.put(event.request, responseToCache);
                 });
                 return response;
-            }).catch(() => {
-                // Çevrimdışı durumlar için fallback
-            });
+            }).catch(() => {});
         })
     );
 });
