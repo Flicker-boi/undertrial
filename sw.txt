@@ -1,4 +1,4 @@
-const CACHE_NAME = 'undertale-deneme-v4';
+const CACHE_NAME = 'undertale-deneme-v3';
 
 const ASSETS_TO_CACHE = [
     './',
@@ -23,7 +23,7 @@ const ASSETS_TO_CACHE = [
     'https://i.ibb.co/4Z09dCDt/ah.png'
 ];
 
-// Service Worker Kurulumu ve Dosyaların Önbelleğe Alınması
+// Service Worker Kurulumu
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
@@ -51,33 +51,55 @@ self.addEventListener('activate', (event) => {
     self.clients.claim();
 });
 
-// Fetch (Ağ İsteklerini Yakalama) Stratejisi
+// Medya dosyaları (mp3, mp4) için Range (Parçalı) İstek Destekli Fetch Stratejisi
 self.addEventListener('fetch', (event) => {
     const url = new URL(event.request.url);
 
-    // MP3 ve MP4 dosyaları için çevrimdışı önbellek desteği
+    // Eğer istek mp3 veya mp4 dosyalarına yapıldıysa özel akış uygula
     if (url.pathname.endsWith('.mp3') || url.pathname.endsWith('.mp4')) {
         event.respondWith(
             caches.open(CACHE_NAME).then(async (cache) => {
                 const cachedResponse = await cache.match(event.request);
                 
                 if (cachedResponse) {
-                    return cachedResponse;
+                    // Tarayıcı medya oynatmak için Range isteği (parça isteği) gönderebilir
+                    const rangeHeader = event.request.headers.get('range');
+                    if (!rangeHeader) {
+                        return cachedResponse;
+                    }
+
+                    const arrayBuffer = await cachedResponse.arrayBuffer();
+                    const bytes = rangeHeader.replace(/bytes=/, "").split("-");
+                    const start = parseInt(bytes[0], 10);
+                    const end = bytes[1] ? parseInt(bytes[1], 10) : arrayBuffer.byteLength - 1;
+                    const chunk = arrayBuffer.slice(start, end + 1);
+
+                    return new Response(chunk, {
+                        status: 206,
+                        statusText: 'Partial Content',
+                        headers: [
+                            ['Content-Type', cachedResponse.headers.get('Content-Type') || (url.pathname.endsWith('.mp4') ? 'video/mp4' : 'audio/mpeg')],
+                            ['Content-Range', `bytes ${start}-${end}/${arrayBuffer.byteLength}`],
+                            ['Content-Length', chunk.byteLength],
+                            ['Accept-Ranges', 'bytes']
+                        ]
+                    });
                 }
 
+                // Önbellekte yoksa internetten çekmeyi dene
                 try {
                     const networkResponse = await fetch(event.request);
                     cache.put(event.request, networkResponse.clone());
                     return networkResponse;
                 } catch (error) {
-                    return new Response('Medya çevrimdışı yüklenemedi.', { status: 404 });
+                    return new Response('Medya çevrimdışı olarak yüklenemedi.', { status: 404 });
                 }
             })
         );
         return;
     }
 
-    // Diğer standart dosyalar için normal önbellek ve ağ stratejisi
+    // Diğer standart dosyalar için normal önbellek stratejisi
     event.respondWith(
         caches.match(event.request).then((cachedResponse) => {
             if (cachedResponse) {
@@ -93,7 +115,7 @@ self.addEventListener('fetch', (event) => {
                 });
                 return response;
             }).catch(() => {
-                // Çevrimdışı durumlar için fallback
+                // Çevrimdışı fallback
             });
         })
     );
